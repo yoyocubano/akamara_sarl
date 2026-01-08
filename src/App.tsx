@@ -20,10 +20,10 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-4 group">
+            <Link to="/" className="flex items-center space-x-4 group perspective-[1000px]">
               <div className="relative">
                 <div className="absolute inset-0 bg-amber-500 blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
-                <img src={logo} alt="Akamara Logo" className="relative w-16 h-16 object-contain drop-shadow-2xl transition-transform duration-300 group-hover:scale-105" />
+                <img src={logo} alt="Akamara Logo" className="relative w-16 h-16 object-contain drop-shadow-2xl logo-beat transition-all duration-300" />
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-amber-500 transition-colors duration-300">Akamara</span>
@@ -92,7 +92,7 @@ const Hero = () => (
 
       <h1 className="text-6xl md:text-9xl font-black text-white mb-8 leading-[0.9] tracking-tighter">
         El Destello de la <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-white to-amber-700 energy-pulse">
+        <span className="text-comet">
           Creación
         </span>
       </h1>
