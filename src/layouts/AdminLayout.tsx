@@ -1,7 +1,7 @@
 
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { LayoutDashboard, Newspaper, Package, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Newspaper, Package, LogOut } from 'lucide-react';
 import logo from '../assets/logo.png';
 
 const AdminLayout = () => {
