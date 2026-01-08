@@ -404,8 +404,9 @@ const Footer = () => (
 
 import Login from './pages/Login';
 import AdminLayout from './layouts/AdminLayout';
-import Dashboard from './pages/admin/Dashboard';
-import ProtectedRoute from './components/auth/ProtectedRoute';
+import StatusDashboard from './pages/admin/StatusDashboard';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
+import './i18n'; // Init i18n
 
 // ... existing components ...
 
@@ -415,6 +416,7 @@ const PublicLayout = () => (
     <main className="flex-grow">
       <Outlet />
     </main>
+    <LanguageSwitcher />
     <Footer />
   </div>
 );
@@ -445,7 +447,7 @@ const App = () => {
         {/* Protected Admin Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route index element={<StatusDashboard />} />
             <Route path="novedades" element={<div className="text-white">Gestor de Novedades (En Construcción)</div>} />
             <Route path="mobiliario" element={<div className="text-white">Gestor de Mobiliario (En Construcción)</div>} />
           </Route>

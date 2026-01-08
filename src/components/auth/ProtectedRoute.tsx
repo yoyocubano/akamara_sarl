@@ -1,8 +1,9 @@
 
-import { Navigate, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Sparkles } from 'lucide-react';
+import Login from '../../pages/Login';
 
 const ProtectedRoute = () => {
     const [session, setSession] = useState<any>(null);
@@ -30,8 +31,6 @@ const ProtectedRoute = () => {
             </div>
         );
     }
-
-    import Login from '../../pages/Login';
 
     if (!session) {
         return <Login />;
