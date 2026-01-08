@@ -187,15 +187,6 @@ const LegalSection = () => (
 );
 
 const DivisionCard = ({ icon, title, subtitle, desc, image }: { icon: any, title: string, subtitle: string, desc: string, image: string }) => {
-  // Map emoji icons/strings to Lucide components if needed, or use as is
-  const IconWrapper = () => {
-    if (title.includes("Mobiliario")) return <Armchair className="w-8 h-8" />;
-    if (title.includes("Construcción")) return <Hammer className="w-8 h-8" />;
-    if (title.includes("Gastronomía")) return <ChefHat className="w-8 h-8" />;
-    if (title.includes("Logística")) return <Truck className="w-8 h-8" />;
-    return <Star className="w-8 h-8" />;
-  };
-
   return (
     <div className="group bg-slate-900 border border-white/5 rounded-[2rem] overflow-hidden hover:border-amber-500/50 transition-all duration-500 relative h-[500px] flex flex-col">
       <div className="absolute inset-0 z-0">
@@ -205,7 +196,7 @@ const DivisionCard = ({ icon, title, subtitle, desc, image }: { icon: any, title
 
       <div className="relative z-10 p-8 h-full flex flex-col">
         <div className="w-16 h-16 bg-white/5 backdrop-blur-md rounded-2xl flex items-center justify-center text-amber-500 mb-6 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors">
-          <IconWrapper />
+          {icon}
         </div>
 
         <span className="text-[10px] uppercase tracking-[0.3em] font-black text-amber-500 mb-2">{subtitle}</span>
