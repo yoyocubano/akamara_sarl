@@ -2,15 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, Send, Sparkles } from "lucide-react";
 
-// --- Theme Constants (Cosmic Luxury) ---
-const THEME = {
-    primary: "#f59e0b", // Amber 500
-    bg: "bg-slate-950",
-    surface: "bg-black",
-    userBubble: "bg-amber-600 text-white",
-    botBubble: "bg-slate-800 text-slate-200",
-    dateBadge: "bg-slate-900 text-slate-500",
-};
+
 
 interface Message {
     role: "user" | "assistant";

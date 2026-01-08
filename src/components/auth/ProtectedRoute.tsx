@@ -31,8 +31,10 @@ const ProtectedRoute = () => {
         );
     }
 
+    import Login from '../../pages/Login';
+
     if (!session) {
-        return <Navigate to="/login" replace />;
+        return <Login />;
     }
 
     return <Outlet />;
