@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Menu, X, Shield, MapPin, Phone, Mail, FileText, ArrowUpRight, Award, Box, Sparkles, Orbit, ArrowRight } from 'lucide-react';
 import { DIVISIONS, LEGAL_INFO } from './constants';
+import logo from './assets/logo.png';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ const Navbar = () => {
             <Link to="/" className="flex items-center space-x-4 group">
               <div className="relative">
                 <div className="absolute inset-0 bg-amber-500 blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
-                <img src="/src/assets/logo.png" alt="Akamara Logo" className="relative w-16 h-16 object-contain drop-shadow-2xl transition-transform duration-300 group-hover:scale-105" />
+                <img src={logo} alt="Akamara Logo" className="relative w-16 h-16 object-contain drop-shadow-2xl transition-transform duration-300 group-hover:scale-105" />
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-amber-500 transition-colors duration-300">Akamara</span>
@@ -362,7 +363,7 @@ const Footer = () => (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
         <div className="col-span-1 md:col-span-2">
           <Link to="/" className="flex items-center space-x-3 mb-6">
-            <img src="/src/assets/logo.png" alt="Akamara Logo" className="w-12 h-12 object-contain" />
+            <img src={logo} alt="Akamara Logo" className="w-12 h-12 object-contain" />
             <span className="text-2xl font-black uppercase tracking-tighter">Akamara S.U.R.L.</span>
           </Link>
           <p className="text-slate-500 max-w-sm text-sm leading-relaxed mb-6 italic">
