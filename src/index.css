@@ -10,6 +10,71 @@ body {
   overflow-x: hidden;
 }
 
+/* --- ANIMATIONS --- */
+
+/* 1. 3D Spin on Hover (Logo) */
+@keyframes spin-y {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.logo-beat {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.logo-beat:hover {
+  animation: spin-y 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px rgba(245, 158, 11, 0.8));
+  /* Intense Amber Glow */
+  transform: scale(1.15);
+  cursor: pointer;
+}
+
+/* 2. Comet Shine Text (Left to Right) */
+@keyframes comet-shine {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.text-comet {
+  background: linear-gradient(90deg,
+      #ffffff 0%,
+      #ffffff 45%,
+      #f59e0b 50%,
+      /* Gold/Amber flash in the middle */
+      #ffffff 55%,
+      #ffffff 100%);
+  background-size: 200% auto;
+  color: transparent;
+  /* Essential for text clip */
+  background-clip: text;
+  -webkit-background-clip: text;
+  /* Safari/Chrome support */
+  animation: comet-shine 3s linear infinite;
+  /* Continuous flow */
+  display: inline-block;
+}
+
+.text-comet:hover {
+  text-shadow: 0 0 40px rgba(255, 255, 255, 0.9);
+  /* Bright white explosion on hover */
+  transform: scale(1.05);
+  cursor: default;
+  transition: all 0.3s ease;
+}
+
+/* 3. Cosmic Background Pulse */
 .energy-pulse {
   animation: pulse-glow 3s infinite alternate;
 }
