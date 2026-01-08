@@ -1,18 +1,36 @@
 import { useState } from 'react';
 import { HashRouter, Routes, Route, Link, useLocation, Outlet } from 'react-router-dom';
 import { Menu, X, Shield, MapPin, Phone, Mail, FileText, ArrowUpRight, Award, Box, Sparkles, Orbit, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useConfig, ConfigProvider } from './contexts/ConfigContext';
 import { DIVISIONS, LEGAL_INFO } from './constants';
 import logo from './assets/logo.png';
+
+// Pages & Components
+import Login from './pages/Login';
+import AdminLayout from './layouts/AdminLayout';
+import StatusDashboard from './pages/admin/StatusDashboard';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import NovedadesManager from './pages/admin/NovedadesManager';
+import SettingsManager from './pages/admin/SettingsManager';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
+import OriChatBot from './components/OriChatBot';
+import { WhatsAppButton } from './components/WhatsAppButton';
+
+// Init
+import './i18n';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
+  const { config } = useConfig();
 
   const links = [
-    { name: 'Hub Principal', path: '/' },
-    { name: 'Expediente Legal', path: '/legal' },
-    { name: 'Mobiliario', path: '/mobiliario' },
-    { name: 'Contacto', path: '/contact' },
+    { name: t('nav.hub'), path: '/' },
+    { name: t('nav.legal'), path: '/legal' },
+    { name: t('nav.furniture'), path: '/mobiliario' },
+    { name: t('nav.contact'), path: '/contact' },
   ];
 
   return (
@@ -26,8 +44,8 @@ const Navbar = () => {
                 <img src={logo} alt="Akamara Logo" className="relative w-16 h-16 object-contain drop-shadow-2xl logo-beat transition-all duration-300" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-amber-500 transition-colors duration-300">Akamara</span>
-                <span className="text-[9px] uppercase tracking-[0.4em] text-slate-400 font-bold">Inicio de la Creación</span>
+                <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-amber-500 transition-colors duration-300">{config.site_title || 'Akamara'}</span>
+                <span className="text-[9px] uppercase tracking-[0.4em] text-slate-400 font-bold">{config.site_slogan || 'Inicio de la Creación'}</span>
               </div>
             </Link>
           </div>
@@ -72,51 +90,56 @@ const Navbar = () => {
   );
 };
 
-const Hero = () => (
-  <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-void pt-20">
-    <div className="absolute inset-0 z-0 pointer-events-none">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-600/10 rounded-full blur-[80px] animate-pulse will-change-opacity"></div>
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[60px]"></div>
-      <img
-        src="https://images.unsplash.com/photo-1464802686167-b939a67e06a1?auto=format&fit=crop&q=80&w=2000"
-        className="w-full h-full object-cover opacity-20 mix-blend-screen"
-        alt="Cosmic Energy"
-      />
-    </div>
+const Hero = () => {
+  const { t } = useTranslation();
+  const { config } = useConfig();
 
-    <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-      <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-8 backdrop-blur-md hover:bg-white/10 transition-colors">
-        <Sparkles className="w-4 h-4 text-amber-500 animate-spin-slow" />
-        <span className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-300">Antes del tiempo, Akamara</span>
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-void pt-20">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-600/10 rounded-full blur-[80px] animate-pulse will-change-opacity"></div>
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[60px]"></div>
+        <img
+          src="https://images.unsplash.com/photo-1464802686167-b939a67e06a1?auto=format&fit=crop&q=80&w=2000"
+          className="w-full h-full object-cover opacity-20 mix-blend-screen"
+          alt="Cosmic Energy"
+        />
       </div>
 
-      <h1 className="text-6xl md:text-9xl font-black text-white mb-8 leading-[0.9] tracking-tighter">
-        El Destello de la <br />
-        <span className="text-comet">
-          Creación
-        </span>
-      </h1>
+      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+        <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-8 backdrop-blur-md hover:bg-white/10 transition-colors">
+          <Sparkles className="w-4 h-4 text-amber-500 animate-spin-slow" />
+          <span className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-300">{t('hero.subtitle')}</span>
+        </div>
 
-      <p className="text-lg md:text-2xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed font-light italic">
-        "Akamara nace como un ecosistema multiservicios en Cuba. Desde la fabricación de mobiliario de diseño, hasta soluciones logísticas y constructivas integrales."
-      </p>
-
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-        <Link to="/servicios" className="group relative px-12 py-5 bg-amber-500 text-slate-950 font-black rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(245,158,11,0.5)] transform-gpu">
-          <span className="relative z-10 flex items-center space-x-2">
-            <span>Explorar Divisiones</span>
-            <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform duration-300" />
+        <h1 className="text-6xl md:text-9xl font-black text-white mb-8 leading-[0.9] tracking-tighter">
+          {config.site_title || 'Akamara'} <br />
+          <span className="text-comet">
+            {t('hero.creacion')}
           </span>
-          <div className="absolute inset-0 shimmer opacity-50"></div>
-        </Link>
-        <Link to="/legal" className="px-12 py-5 bg-white/5 border border-white/10 text-white font-bold rounded-full backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex items-center space-x-2">
-          <Shield size={18} />
-          <span>Ver Credenciales</span>
-        </Link>
+        </h1>
+
+        <p className="text-lg md:text-2xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed font-light italic">
+          "{t('hero.desc')}"
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <Link to="/servicios" className="group relative px-12 py-5 bg-amber-500 text-slate-950 font-black rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(245,158,11,0.5)] transform-gpu">
+            <span className="relative z-10 flex items-center space-x-2">
+              <span>{t('hero.button_explore')}</span>
+              <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform duration-300" />
+            </span>
+            <div className="absolute inset-0 shimmer opacity-50"></div>
+          </Link>
+          <Link to="/legal" className="px-12 py-5 bg-white/5 border border-white/10 text-white font-bold rounded-full backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex items-center space-x-2">
+            <Shield size={18} />
+            <span>{t('hero.button_legal')}</span>
+          </Link>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const LegalSection = () => (
   <section className="py-32 bg-slate-950 relative overflow-hidden">
@@ -280,136 +303,135 @@ const MobiliarioSection = () => (
   </section>
 );
 
-const ContactView = () => (
-  <div className="pt-40 pb-24 bg-void min-h-screen">
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="bg-slate-900 border border-white/10 rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row">
-        <div className="bg-slate-950 p-12 text-white md:w-2/5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-6 opacity-5">
-            <MapPin size={150} />
-          </div>
-          <h2 className="text-3xl font-black mb-6 leading-tight">Hablemos de su <span className="text-amber-500">Proyecto</span>.</h2>
-          <p className="text-slate-400 text-sm mb-12 font-light">Nuestros expertos están listos para asesorarle en cualquiera de nuestras divisiones operativas.</p>
+const ContactView = () => {
+  const { config } = useConfig();
+  return (
+    <div className="pt-40 pb-24 bg-void min-h-screen">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-slate-900 border border-white/10 rounded-[3rem] shadow-2xl overflow-hidden flex flex-col md:flex-row">
+          <div className="bg-slate-950 p-12 text-white md:w-2/5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-6 opacity-5">
+              <MapPin size={150} />
+            </div>
+            <h2 className="text-3xl font-black mb-6 leading-tight">Hablemos de su <span className="text-amber-500">Proyecto</span>.</h2>
+            <p className="text-slate-400 text-sm mb-12 font-light">Nuestros expertos están listos para asesorarle en cualquiera de nuestras divisiones operativas.</p>
 
-          <div className="space-y-8">
-            <div className="flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                <Phone size={18} />
+            <div className="space-y-8">
+              <div className="flex items-start space-x-4">
+                <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
+                  <Phone size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Llámenos</p>
+                  <p className="text-white font-bold">{config.contact_phone}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Llámenos</p>
-                <p className="text-white font-bold">{LEGAL_INFO.contact.phone}</p>
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
+                  <Mail size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Escribanos</p>
+                  <p className="text-white font-bold">{config.contact_email}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                <Mail size={18} />
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Escribanos</p>
-                <p className="text-white font-bold">{LEGAL_INFO.contact.email}</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
-                <MapPin size={18} />
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Visítenos</p>
-                <p className="text-white font-bold">{LEGAL_INFO.location}</p>
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
+                  <MapPin size={18} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Visítenos</p>
+                  <p className="text-white font-bold">{LEGAL_INFO.location}</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="p-12 md:w-3/5 bg-slate-900">
-          <form className="space-y-6">
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">Nombre</label>
-                <input type="text" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
+          <div className="p-12 md:w-3/5 bg-slate-900">
+            <form className="space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">Nombre</label>
+                  <input type="text" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
+                </div>
+                <div>
+                  <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">Empresa</label>
+                  <input type="text" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
+                </div>
               </div>
               <div>
-                <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">Empresa</label>
-                <input type="text" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
+                <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">División de Interés</label>
+                <select className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all appearance-none cursor-pointer">
+                  <option>Mobiliario</option>
+                  <option>Construcción</option>
+                  <option>Logística</option>
+                  <option>Gastronomía</option>
+                </select>
               </div>
-            </div>
-            <div>
-              <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">División de Interés</label>
-              <select className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all appearance-none cursor-pointer">
-                <option>Mobiliario</option>
-                <option>Construcción</option>
-                <option>Logística</option>
-                <option>Gastronomía</option>
-              </select>
-            </div>
-            <div>
-              <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">Mensaje</label>
-              <textarea rows={4} className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all"></textarea>
-            </div>
-            <button className="w-full bg-amber-500 text-slate-950 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-400 hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-              Enviar Propuesta
-            </button>
-          </form>
+              <div>
+                <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">Mensaje</label>
+                <textarea rows={4} className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all"></textarea>
+              </div>
+              <button className="w-full bg-amber-500 text-slate-950 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-400 hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+                Enviar Propuesta
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
-const Footer = () => (
-  <footer className="bg-slate-950 border-t border-white/5 py-24 text-white">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-        <div className="col-span-1 md:col-span-2">
-          <Link to="/" className="flex items-center space-x-3 mb-6">
-            <img src={logo} alt="Akamara Logo" className="w-12 h-12 object-contain" />
-            <span className="text-2xl font-black uppercase tracking-tighter">Akamara S.U.R.L.</span>
-          </Link>
-          <p className="text-slate-500 max-w-sm text-sm leading-relaxed mb-6 italic">
-            "Inicio de la creación. Ecosistema de servicios integrales operando bajo licencia mercantil en la República de Cuba."
-          </p>
+const Footer = () => {
+  const { config } = useConfig();
+  return (
+    <footer className="bg-slate-950 border-t border-white/5 py-24 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div className="col-span-1 md:col-span-2">
+            <Link to="/" className="flex items-center space-x-3 mb-6">
+              <img src={logo} alt="Akamara Logo" className="w-12 h-12 object-contain" />
+              <span className="text-2xl font-black uppercase tracking-tighter">{config.site_title || 'Akamara S.U.R.L.'}</span>
+            </Link>
+            <p className="text-slate-500 max-w-sm text-sm leading-relaxed mb-6 italic">
+              "{config.site_slogan || 'Inicio de la creación. Ecosistema de servicios integrales operando bajo licencia mercantil en la República de Cuba.'}"
+            </p>
+          </div>
+          <div>
+            <h4 className="text-xs font-black uppercase tracking-widest text-amber-500 mb-6">Sectores</h4>
+            <ul className="space-y-4 text-xs text-slate-400 font-medium">
+              <Link to="/mobiliario"><li className="hover:text-white transition-colors cursor-pointer">Mobiliario de Diseño</li></Link>
+              <li className="hover:text-white transition-colors cursor-pointer">Construcción</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Catering & Cafetería</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Transporte Especializado</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-xs font-black uppercase tracking-widest text-amber-500 mb-6">Legal</h4>
+            <ul className="space-y-4 text-xs text-slate-400 font-medium">
+              <li className="hover:text-white transition-colors cursor-pointer">Expediente SURL</li>
+              <li className="hover:text-white transition-colors cursor-pointer flex items-center justify-between">
+                <span>NIT: {LEGAL_INFO.nit}</span>
+                <Shield size={12} className="text-green-500" />
+              </li>
+              <li className="hover:text-white transition-colors cursor-pointer">Gaceta Oficial</li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <h4 className="text-xs font-black uppercase tracking-widest text-amber-500 mb-6">Sectores</h4>
-          <ul className="space-y-4 text-xs text-slate-400 font-medium">
-            <Link to="/mobiliario"><li className="hover:text-white transition-colors cursor-pointer">Mobiliario de Diseño</li></Link>
-            <li className="hover:text-white transition-colors cursor-pointer">Construcción</li>
-            <li className="hover:text-white transition-colors cursor-pointer">Catering & Cafetería</li>
-            <li className="hover:text-white transition-colors cursor-pointer">Transporte Especializado</li>
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-xs font-black uppercase tracking-widest text-amber-500 mb-6">Legal</h4>
-          <ul className="space-y-4 text-xs text-slate-400 font-medium">
-            <li className="hover:text-white transition-colors cursor-pointer">Expediente SURL</li>
-            <li className="hover:text-white transition-colors cursor-pointer flex items-center justify-between">
-              <span>NIT: {LEGAL_INFO.nit}</span>
-              <Shield size={12} className="text-green-500" />
-            </li>
-            <li className="hover:text-white transition-colors cursor-pointer">Gaceta Oficial</li>
-          </ul>
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[9px] font-black uppercase tracking-[0.2em] text-slate-600">
+          <p>© 2024 {config.site_title || 'AKAMARA S.U.R.L.'} - LA HABANA, CUBA</p>
+          <div className="flex space-x-6">
+            <span className="hover:text-amber-500 transition-colors cursor-pointer">Privacidad</span>
+            <span className="hover:text-amber-500 transition-colors cursor-pointer">Términos</span>
+          </div>
         </div>
       </div>
-      <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[9px] font-black uppercase tracking-[0.2em] text-slate-600">
-        <p>© 2024 AKAMARA S.U.R.L. - LA HABANA, CUBA</p>
-        <div className="flex space-x-6">
-          <span className="hover:text-amber-500 transition-colors cursor-pointer">Privacidad</span>
-          <span className="hover:text-amber-500 transition-colors cursor-pointer">Términos</span>
-        </div>
-      </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
-import Login from './pages/Login';
-import AdminLayout from './layouts/AdminLayout';
-import StatusDashboard from './pages/admin/StatusDashboard';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
-import './i18n'; // Init i18n
-
-// ... existing components ...
+// ... existing components (Hero, Navbar, etc.) are already defined above ...
 
 const PublicLayout = () => (
   <div className="min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 bg-void">
@@ -417,6 +439,8 @@ const PublicLayout = () => (
     <main className="flex-grow">
       <Outlet />
     </main>
+    <OriChatBot />
+    <WhatsAppButton />
     <LanguageSwitcher />
     <Footer />
   </div>
@@ -424,37 +448,40 @@ const PublicLayout = () => (
 
 const App = () => {
   return (
-    <HashRouter>
-      <Routes>
-        {/* Public Routes */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={
-            <>
-              <Hero />
-              <LegalSection />
-              <DivisionExplorer />
-              <MobiliarioSection />
-            </>
-          } />
-          <Route path="/legal" element={<LegalSection />} />
-          <Route path="/servicios" element={<DivisionExplorer />} />
-          <Route path="/contact" element={<ContactView />} />
-          <Route path="/mobiliario" element={<MobiliarioSection />} />
-        </Route>
-
-        {/* Auth Route */}
-        <Route path="/login" element={<Login />} />
-
-        {/* Protected Admin Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<StatusDashboard />} />
-            <Route path="novedades" element={<div className="text-white">Gestor de Novedades (En Construcción)</div>} />
-            <Route path="mobiliario" element={<div className="text-white">Gestor de Mobiliario (En Construcción)</div>} />
+    <ConfigProvider>
+      <HashRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={
+              <>
+                <Hero />
+                <LegalSection />
+                <DivisionExplorer />
+                <MobiliarioSection />
+              </>
+            } />
+            <Route path="/legal" element={<LegalSection />} />
+            <Route path="/servicios" element={<DivisionExplorer />} />
+            <Route path="/contact" element={<ContactView />} />
+            <Route path="/mobiliario" element={<MobiliarioSection />} />
           </Route>
-        </Route>
-      </Routes>
-    </HashRouter>
+
+          {/* Auth Route */}
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected Admin Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<StatusDashboard />} />
+              <Route path="novedades" element={<NovedadesManager />} />
+              <Route path="mobiliario" element={<div className="text-white">Gestor de Mobiliario (En Construcción)</div>} />
+              <Route path="config" element={<SettingsManager />} />
+            </Route>
+          </Route>
+        </Routes>
+      </HashRouter>
+    </ConfigProvider>
   );
 };
 

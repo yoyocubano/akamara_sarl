@@ -1,7 +1,7 @@
 
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { LayoutDashboard, Newspaper, Package, LogOut } from 'lucide-react';
+import { LayoutDashboard, Newspaper, Package, LogOut, Settings } from 'lucide-react';
 import logo from '../assets/logo.png';
 
 const AdminLayout = () => {
@@ -37,6 +37,11 @@ const AdminLayout = () => {
                     <Link to="/admin/mobiliario" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors group">
                         <Package className="w-5 h-5 group-hover:text-amber-500 transition-colors" />
                         <span className="text-sm font-bold tracking-wide">Mobiliario</span>
+                    </Link>
+
+                    <Link to="/admin/config" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors group">
+                        <Settings className="w-5 h-5 group-hover:text-amber-500 transition-colors" />
+                        <span className="text-sm font-bold tracking-wide">Configuración</span>
                     </Link>
                 </nav>
 

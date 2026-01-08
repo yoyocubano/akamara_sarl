@@ -23,8 +23,11 @@ i18n
                     },
                     hero: {
                         title: 'Akamara',
-                        subtitle: 'Inicio de la Creación',
-                        desc: 'Donde la materia prima encuentra su propósito divino.'
+                        subtitle: 'Antes del tiempo, Akamara',
+                        creacion: 'Creación',
+                        desc: 'Akamara nace como un ecosistema multiservicios en Cuba. Desde la fabricación de mobiliario de diseño, hasta soluciones logísticas y constructivas integrales.',
+                        button_explore: 'Explorar Divisiones',
+                        button_legal: 'Ver Credenciales'
                     }
                 }
             },
@@ -32,14 +35,17 @@ i18n
                 translation: {
                     nav: {
                         hub: 'Main Hub',
-                        legal: 'Legal File',
+                        legal: 'Legal Documents',
                         furniture: 'Furniture',
                         contact: 'Contact'
                     },
                     hero: {
                         title: 'Akamara',
-                        subtitle: 'Genesis of Creation',
-                        desc: 'Where raw matter finds its divine purpose.'
+                        subtitle: 'Before time, Akamara',
+                        creacion: 'Creation',
+                        desc: 'Akamara is born as a multi-service ecosystem in Cuba. From professional furniture manufacturing to integral logistics and construction solutions.',
+                        button_explore: 'Explore Divisions',
+                        button_legal: 'Legal Credentials'
                     }
                 }
             }
