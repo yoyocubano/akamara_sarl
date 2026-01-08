@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -17,8 +15,13 @@ body {
 }
 
 @keyframes pulse-glow {
-  0% { text-shadow: 0 0 10px rgba(245, 158, 11, 0.2); }
-  100% { text-shadow: 0 0 30px rgba(245, 158, 11, 0.8); }
+  0% {
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+  }
+
+  100% {
+    text-shadow: 0 0 30px rgba(245, 158, 11, 0.8);
+  }
 }
 
 .cosmic-glow:hover {
@@ -26,7 +29,7 @@ body {
 }
 
 .shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transform: skewX(-20deg) translateX(-150%);
   transition: transform 0.5s;
 }
