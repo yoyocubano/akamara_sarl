@@ -2,8 +2,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, Send, Sparkles } from "lucide-react";
 
-
-
 interface Message {
     role: "user" | "assistant";
     content: string;
@@ -17,6 +15,38 @@ export default function OriChatBot() {
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    // Dynamic Identity Logic
+    const YUNIOR_END_DATE = new Date("2026-01-16T23:59:59"); // 1 week from now (Jan 9)
+    const isYuniorMode = new Date() < YUNIOR_END_DATE;
+
+    const botIdentity = isYuniorMode ? {
+        name: "Yunior GPT",
+        slogan: "que bolero el mio",
+        vibe: "repartero",
+        greeting: "¡Oye qué volá! Soy Yunior, el que sabe de todo aquí en Akamara. Dime qué es lo que hay, ¿qué bolero el mío?",
+        responses: [
+            "Asere, déjame ver qué te invento con la tecnología esta...",
+            "¡Oye, eso está volao! En Akamara andamos en la talla, tú sabes.",
+            "Dame un chance que estoy tirándole un cabo a la neurona.",
+            "¿Tú quieres saber de muebles o de obra? Suelta por esa boca que aquí todo es fula.",
+            "¡Qué clase de muela! Pero dale, que yo te sigo el rastro."
+        ],
+        iconStyle: "bg-red-600 shadow-red-900/40"
+    } : {
+        name: "Ori IA",
+        slogan: "Asistente Virtual Eficiente",
+        vibe: "efficient",
+        greeting: "¡Hola! Soy Ori, la asistente virtual de Akamara. ¿En qué puedo ayudarle hoy de manera eficiente?",
+        responses: [
+            "Estoy procesando su solicitud con nuestros algoritmos de precisión...",
+            "Información analizada. En Akamara priorizamos la eficiencia y la calidad.",
+            "Permítame consultar nuestra base de datos para brindarle la mejor respuesta.",
+            "Entendido. ¿Desea detalles sobre nuestros servicios de Mobiliario o Construcción?",
+            "Optimización en curso. Seguimos a su disposición para cualquier duda técnica."
+        ],
+        iconStyle: "bg-gradient-to-tr from-amber-500 to-amber-700"
+    };
+
     // Initial Greeting
     useEffect(() => {
         if (messages.length === 0 && isOpen) {
@@ -24,14 +54,14 @@ export default function OriChatBot() {
             const timer = setTimeout(() => {
                 setMessages([{
                     role: "assistant",
-                    content: "¡Hola! Soy Ori, la asistente virtual de Akamara. ¿En qué puedo ayudarte hoy?",
+                    content: botIdentity.greeting,
                     timestamp: getCurrentTime()
                 }]);
                 setIsLoading(false);
             }, 800);
             return () => clearTimeout(timer);
         }
-    }, [isOpen, messages.length]);
+    }, [isOpen, messages.length, botIdentity.greeting]);
 
     // Auto-Scroll
     useEffect(() => {
@@ -56,13 +86,7 @@ export default function OriChatBot() {
 
         // Simulate Response
         setTimeout(() => {
-            const responses = [
-                "Estoy procesando tu solicitud con mis algoritmos creativos...",
-                "Interesante punto. En Akamara buscamos trascender lo ordinario.",
-                "Esa es una excelente pregunta. Permíteme consultar con La Fragua.",
-                "Entendido. ¿Te gustaría saber más sobre nuestros servicios de Mobiliario o Construcción?"
-            ];
-            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            const randomResponse = botIdentity.responses[Math.floor(Math.random() * botIdentity.responses.length)];
 
             setMessages((prev) => [...prev, {
                 role: "assistant",
@@ -84,14 +108,14 @@ export default function OriChatBot() {
                         <div className="p-4 flex justify-between items-center bg-slate-900/90 border-b border-white/5 backdrop-blur-md">
                             <div className="flex items-center gap-3">
                                 <div className="relative">
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center border border-white/10 shadow-lg">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border border-white/10 shadow-lg transition-colors duration-500 ${botIdentity.iconStyle}`}>
                                         <Sparkles className="w-5 h-5 text-white" />
                                     </div>
                                     <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"></span>
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-white text-base">Ori AI</h3>
-                                    <p className="text-[10px] text-amber-500 uppercase tracking-widest font-bold">Asistente Virtual</p>
+                                    <h3 className="font-bold text-white text-base">{botIdentity.name}</h3>
+                                    <p className="text-[10px] text-amber-500 uppercase tracking-widest font-bold">{botIdentity.slogan}</p>
                                 </div>
                             </div>
                             <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white transition-colors">
@@ -160,7 +184,7 @@ export default function OriChatBot() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-2xl shadow-amber-500/30 hover:scale-110 hover:shadow-amber-500/50 transition-all duration-300 flex items-center justify-center group"
+                    className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full text-white shadow-2xl transition-all duration-300 flex items-center justify-center group transform-gpu hover:scale-110 ${isYuniorMode ? 'bg-red-600 shadow-red-500/30 hover:shadow-red-500/50' : 'bg-gradient-to-r from-amber-500 to-amber-600 shadow-amber-500/30 hover:shadow-amber-500/50'}`}
                 >
                     <Sparkles className="w-8 h-8 group-hover:rotate-12 transition-transform" />
                     <span className="absolute -top-1 -right-1 flex h-3 w-3">
