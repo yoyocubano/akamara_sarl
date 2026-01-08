@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link, useLocation, Outlet } from 'react-router-dom';
 import { Menu, X, Shield, MapPin, Phone, Mail, FileText, ArrowUpRight, Award, Box, Sparkles, Orbit, ArrowRight } from 'lucide-react';
 import { DIVISIONS, LEGAL_INFO } from './constants';
 import logo from './assets/logo.png';
@@ -402,29 +402,55 @@ const Footer = () => (
   </footer>
 );
 
+import Login from './pages/Login';
+import AdminLayout from './layouts/AdminLayout';
+import Dashboard from './pages/admin/Dashboard';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+
+// ... existing components ...
+
+const PublicLayout = () => (
+  <div className="min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 bg-void">
+    <Navbar />
+    <main className="flex-grow">
+      <Outlet />
+    </main>
+    <Footer />
+  </div>
+);
+
 const App = () => {
   return (
     <HashRouter>
-      <div className="min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 bg-void">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={
-              <>
-                <Hero />
-                <LegalSection />
-                <DivisionExplorer />
-                <MobiliarioSection />
-              </>
-            } />
-            <Route path="/legal" element={<LegalSection />} />
-            <Route path="/servicios" element={<DivisionExplorer />} />
-            <Route path="/contact" element={<ContactView />} />
-            <Route path="/mobiliario" element={<MobiliarioSection />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <Routes>
+        {/* Public Routes */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={
+            <>
+              <Hero />
+              <LegalSection />
+              <DivisionExplorer />
+              <MobiliarioSection />
+            </>
+          } />
+          <Route path="/legal" element={<LegalSection />} />
+          <Route path="/servicios" element={<DivisionExplorer />} />
+          <Route path="/contact" element={<ContactView />} />
+          <Route path="/mobiliario" element={<MobiliarioSection />} />
+        </Route>
+
+        {/* Auth Route */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected Admin Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="novedades" element={<div className="text-white">Gestor de Novedades (En Construcción)</div>} />
+            <Route path="mobiliario" element={<div className="text-white">Gestor de Mobiliario (En Construcción)</div>} />
+          </Route>
+        </Route>
+      </Routes>
     </HashRouter>
   );
 };
