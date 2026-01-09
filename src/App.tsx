@@ -19,6 +19,7 @@ import OriChatBot from './components/OriChatBot';
 import { WhatsAppButton } from './components/WhatsAppButton';
 
 // Init
+import { supabase } from './lib/supabase';
 import './i18n';
 
 const Navbar = () => {
@@ -465,7 +466,53 @@ const PublicLayout = () => (
   </div>
 );
 
+import { databases, APPWRITE_CONFIG } from './lib/appwrite';
+import { ID } from 'appwrite';
+import './i18n';
+
 const App = () => {
+  // --- ANALYTICS TRACKING ---
+  // --- ANALYTICS TRACKING ---
+  const location = useLocation();
+  
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        // Generate or retrieve anonymous session ID
+        let visitorId = localStorage.getItem('akamara_visitor_id');
+        if (!visitorId) {
+          visitorId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+          localStorage.setItem('akamara_visitor_id', visitorId);
+        }
+
+  }, [location]);
+  
+  useEffect(() => {
+    const trackVisit = async () => {
+      try {
+        // Generate or retrieve anonymous session ID
+        let visitorId = localStorage.getItem('akamara_visitor_id');
+        if (!visitorId) {
+          visitorId = Math.random().toString(36).substring(2) + Date.now().toString(36);
+          localStorage.setItem('akamara_visitor_id', visitorId);
+        }
+
+        const { error } = await supabase.from('analytics_visits').insert({
+          page: location.pathname + location.search,
+          visitor_id: visitorId,
+          screen_size: `${window.innerWidth}x${window.innerHeight}`,
+          user_agent: navigator.userAgent
+        });
+
+        if (error) console.warn('Tracking error:', error);
+      } catch (err) {
+        // Silent fail for analytics
+      }
+    };
+
+    trackVisit();
+  }, [location]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'l') {

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Settings, Save, Loader, Mail, Phone, Type, Info } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { databases, APPWRITE_CONFIG } from '../../lib/appwrite';
 import { useConfig } from '../../contexts/ConfigContext';
 
 const SettingsManager = () => {
@@ -34,14 +34,32 @@ const SettingsManager = () => {
         setMessage({ type: '', text: '' });
 
         try {
-            const updates = Object.entries(formData).map(([key, value]) => ({
-                key,
-                value,
-            }));
-
-            const { error } = await supabase.from('site_settings').upsert(updates);
-
-            if (error) throw error;
+            const updates = Object.entries(formData);
+            
+            // Process updates sequentially to handle 'upsert' logic
+            for (const [key, value] of updates) {
+                try {
+                    // Try to create first (using key as ID for easy lookup)
+                    await databases.createDocument(
+                        APPWRITE_CONFIG.DATABASE_ID,
+                        APPWRITE_CONFIG.COLLECTIONS.SETTINGS,
+                        key, // Document ID = Setting Key
+                        { key, value }
+                    );
+                } catch (error: any) {
+                    // If conflict (409), document exists, so update it
+                    if (error.code === 409) {
+                        await databases.updateDocument(
+                            APPWRITE_CONFIG.DATABASE_ID,
+                            APPWRITE_CONFIG.COLLECTIONS.SETTINGS,
+                            key,
+                            { value }
+                        );
+                    } else {
+                        throw error;
+                    }
+                }
+            }
 
             await refreshConfig();
             setMessage({ type: 'success', text: 'Configuración guardada correctamente.' });

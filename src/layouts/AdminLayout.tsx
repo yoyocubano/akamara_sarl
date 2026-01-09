@@ -78,7 +78,11 @@ const AdminLayout = () => {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        await supabase.auth.signOut();
+        try {
+            await account.deleteSession('current');
+        } catch (e) {
+            console.error('Logout error', e);
+        }
         navigate('/login');
     };
 

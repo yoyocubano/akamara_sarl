@@ -1,28 +1,14 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { databases, APPWRITE_CONFIG } from '../lib/appwrite';
 
-interface Config {
-    contact_phone: string;
-    contact_email: string;
-    site_title: string;
-    site_slogan: string;
-}
+// ... imports
 
-interface ConfigContextType {
-    config: Config;
-    loading: boolean;
-    refreshConfig: () => Promise<void>;
-}
+// ... interfaces
 
-const defaultConfig: Config = {
-    contact_phone: '+53 5 8746866',
-    contact_email: 'direccion@akamara.cu',
-    site_title: 'Akamara S.U.R.L.',
-    site_slogan: 'Inicio de la Creación'
-};
+// ... defaultConfig
 
-const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
+// ... Context creation
 
 export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [config, setConfig] = useState<Config>(defaultConfig);
@@ -30,18 +16,26 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const fetchConfig = async () => {
         try {
-            const { data, error } = await supabase.from('site_settings').select('key, value');
-            if (error) {
-                console.warn('Error fetching config, using defaults:', error.message);
-            } else if (data) {
+            const { documents } = await databases.listDocuments(
+                APPWRITE_CONFIG.DATABASE_ID,
+                APPWRITE_CONFIG.COLLECTIONS.SETTINGS
+            );
+            
+            if (documents.length > 0) {
                 const newConfig = { ...defaultConfig };
-                data.forEach((item: { key: string; value: string }) => {
+                documents.forEach((item: any) => {
                     if (item.key in newConfig) {
                         (newConfig as any)[item.key] = item.value;
                     }
                 });
                 setConfig(newConfig);
             }
+        } catch (err) {
+            console.warn('Error fetching config, using defaults:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
         } catch (err) {
             console.error('Unexpected error fetching config:', err);
         } finally {
@@ -51,18 +45,7 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     useEffect(() => {
         fetchConfig();
-
-        // Subscribe to changes
-        const channel = supabase
-            .channel('site_settings_changes')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'site_settings' }, () => {
-                fetchConfig();
-            })
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(channel);
-        };
+        // Appwrite Realtime could be added here later
     }, []);
 
     return (

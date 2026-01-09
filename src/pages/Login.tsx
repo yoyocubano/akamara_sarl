@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { account } from '../lib/appwrite';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 import logo from '../assets/logo.png';
@@ -17,17 +17,14 @@ const Login = () => {
         setLoading(true);
         setError(null);
 
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-
-        if (error) {
-            setError(error.message);
-        } else {
+        try {
+            await account.createEmailPasswordSession(email, password);
             navigate('/admin');
+        } catch (err: any) {
+            setError(err.message || 'Error de autenticación');
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (

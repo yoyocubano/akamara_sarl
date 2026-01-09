@@ -1,0 +1,26 @@
+{
+    "projectId": "696075130002ba18c0ac",
+    "projectName": "Akamara",
+    "settings": {
+        "services": {
+            "databases": true,
+            "collections": true,
+            "attributes": true,
+            "indexes": true,
+            "documents": true,
+            "users": true,
+            "storage": true,
+            "buckets": true,
+            "files": true,
+            "functions": true,
+            "deployments": true,
+            "executions": true,
+            "teams": true,
+            "memberships": true,
+            "platforms": true,
+            "keys": true,
+            "webhooks": true,
+            "sessions": true
+        }
+    }
+}

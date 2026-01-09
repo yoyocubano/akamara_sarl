@@ -1,14 +1,15 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+import { databases, APPWRITE_CONFIG } from '../../lib/appwrite';
+import { ID, Query } from 'appwrite';
 import { Plus, Trash2, Save, Image, Loader, Newspaper } from 'lucide-react';
 
 interface Novedad {
-    id: number;
+    $id: string;
     title: string;
     overview: string;
     image_url: string;
-    created_at: string;
+    $createdAt: string;
 }
 
 const NovedadesManager = () => {
@@ -28,17 +29,12 @@ const NovedadesManager = () => {
 
     const fetchNovedades = async () => {
         try {
-            // First check if table exists by selecting 1 item, if error, we might need setup
-            const { data, error } = await supabase.from('novedades').select('*').order('created_at', { ascending: false });
-
-            if (error) {
-                console.error('Error fetching novedades:', error);
-                if (error.code === '42P01') { // undefined_table
-                    alert("La tabla 'novedades' no existe. Por favor contacta al desarrollador o ejecuta el script SQL.");
-                }
-            } else {
-                setNovedades(data || []);
-            }
+            const { documents } = await databases.listDocuments(
+                APPWRITE_CONFIG.DATABASE_ID,
+                APPWRITE_CONFIG.COLLECTIONS.NOVEDADES,
+                [Query.orderDesc('$createdAt')]
+            );
+            setNovedades(documents as any as Novedad[]);
         } catch (e) {
             console.error(e);
         } finally {
@@ -50,31 +46,37 @@ const NovedadesManager = () => {
         e.preventDefault();
         setSubmitting(true);
 
-        const { data, error } = await supabase.from('novedades').insert([
-            { title, overview, image_url: imageUrl }
-        ]).select();
+        try {
+            const response = await databases.createDocument(
+                APPWRITE_CONFIG.DATABASE_ID,
+                APPWRITE_CONFIG.COLLECTIONS.NOVEDADES,
+                ID.unique(),
+                { title, overview, image_url: imageUrl }
+            );
 
-        if (error) {
-            alert('Error al crear: ' + error.message);
-        } else {
-            setNovedades(prev => [data[0], ...prev]);
+            setNovedades(prev => [response as any as Novedad, ...prev]);
             setIsCreating(false);
             setTitle('');
             setOverview('');
             setImageUrl('');
+        } catch (error: any) {
+            alert('Error al crear: ' + error.message);
         }
         setSubmitting(false);
     };
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         if (!confirm('¿Estás seguro de eliminar esta noticia?')) return;
 
-        const { error } = await supabase.from('novedades').delete().eq('id', id);
-
-        if (error) {
+        try {
+            await databases.deleteDocument(
+                APPWRITE_CONFIG.DATABASE_ID,
+                APPWRITE_CONFIG.COLLECTIONS.NOVEDADES,
+                id
+            );
+            setNovedades(prev => prev.filter(n => n.$id !== id));
+        } catch (error) {
             alert('Error al eliminar');
-        } else {
-            setNovedades(prev => prev.filter(n => n.id !== id));
         }
     };
 
@@ -181,12 +183,12 @@ const NovedadesManager = () => {
                     )}
 
                     {novedades.map((nav) => (
-                        <div key={nav.id} className="group bg-slate-900/50 border border-white/5 rounded-xl overflow-hidden hover:border-amber-500/50 transition-all duration-300 flex flex-col">
+                        <div key={nav.$id} className="group bg-slate-900/50 border border-white/5 rounded-xl overflow-hidden hover:border-amber-500/50 transition-all duration-300 flex flex-col">
                             <div className="h-48 overflow-hidden relative">
                                 <img src={nav.image_url} alt={nav.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
                                 <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onClick={() => handleDelete(nav.id)} className="p-2 bg-red-500/90 text-white rounded-lg hover:bg-red-600 shadow-lg backdrop-blur-sm">
+                                    <button onClick={() => handleDelete(nav.$id)} className="p-2 bg-red-500/90 text-white rounded-lg hover:bg-red-600 shadow-lg backdrop-blur-sm">
                                         <Trash2 className="w-4 h-4" />
                                     </button>
                                 </div>
@@ -195,7 +197,7 @@ const NovedadesManager = () => {
                                 <h3 className="text-lg font-bold text-white mb-2 leading-tight group-hover:text-amber-500 transition-colors">{nav.title}</h3>
                                 <p className="text-slate-400 text-sm line-clamp-3 mb-4 flex-1">{nav.overview}</p>
                                 <span className="text-[10px] text-slate-600 font-mono uppercase tracking-widest block text-right">
-                                    {new Date(nav.created_at).toLocaleDateString()}
+                                    {new Date(nav.$createdAt).toLocaleDateString()}
                                 </span>
                             </div>
                         </div>
