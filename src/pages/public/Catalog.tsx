@@ -14,9 +14,11 @@ export const Catalog = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const catalogRef = useRef<HTMLDivElement>(null);
 
+  const isSpanish = i18n.language.startsWith('es');
+
   const filteredItems = CATALOG_DATA.filter(item => {
     const matchesFilter = filter === 'all' || item.type === filter;
-    const name = i18n.language === 'es' ? item.name_es : item.name_en;
+    const name = isSpanish ? item.name_es : item.name_en;
     const matchesSearch = name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
   });
@@ -41,7 +43,7 @@ export const Catalog = () => {
 
   const generatePDF = async () => {
     setIsGenerating(true);
-    const isEs = i18n.language === 'es';
+    const isEs = i18n.language.startsWith('es');
     
     try {
       const doc = new jsPDF('p', 'mm', 'a4');
@@ -229,10 +231,11 @@ export const Catalog = () => {
   };
 
   const handleAction = (item: CatalogItem) => {
-    const name = i18n.language === 'es' ? item.name_es : item.name_en;
+    const isEs = i18n.language.startsWith('es');
+    const name = isEs ? item.name_es : item.name_en;
     const message = item.type === 'product' 
-      ? `Hola Akamara, estoy interesado en comprar/cotizar: ${name}`
-      : `Hola Akamara, deseo información sobre el servicio: ${name}`;
+      ? (isEs ? `Hola Akamara, estoy interesado en comprar/cotizar: ${name}` : `Hello Akamara, I am interested in buying/requesting a quote for: ${name}`)
+      : (isEs ? `Hola Akamara, deseo información sobre el servicio: ${name}` : `Hello Akamara, I would like information about the service: ${name}`);
     
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/5358746866?text=${encodedMessage}`;
@@ -248,7 +251,7 @@ export const Catalog = () => {
           <div>
             <Link to="/" className="inline-flex items-center gap-2 text-amber-500 hover:text-amber-400 transition-colors mb-4 font-bold uppercase tracking-widest text-[10px]">
               <ArrowLeft size={14} />
-              {t('policies.back') || 'Volver al Inicio'}
+              {t('policies.back') || (isSpanish ? 'Volver al Inicio' : 'Back to Home')}
             </Link>
             <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
               {t('catalog.title').split(' ')[0]} <span className="text-comet">{t('catalog.title').split(' ').slice(1).join(' ')}</span>
@@ -266,12 +269,12 @@ export const Catalog = () => {
             ) : (
               <Download size={24} className="group-hover:translate-y-1 transition-transform" />
             )}
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-start text-left">
               <span className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">
-                {isGenerating ? (i18n.language === 'es' ? 'PROCESANDO...' : 'PROCESSING...') : (i18n.language === 'es' ? 'OBTENER ARCHIVO' : 'GET FILE')}
+                {isGenerating ? (isSpanish ? 'PROCESANDO...' : 'PROCESSING...') : (isSpanish ? 'OBTENER ARCHIVO' : 'GET FILE')}
               </span>
               <span className="text-xs font-bold opacity-70 leading-none">
-                {i18n.language === 'es' ? 'Catálogo 2026 (Premium PDF)' : '2026 Catalog (Premium PDF)'}
+                {isSpanish ? 'Catálogo 2026 (Premium PDF)' : '2026 Catalog (Premium PDF)'}
               </span>
             </div>
           </button>
@@ -298,7 +301,7 @@ export const Catalog = () => {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
             <input 
               type="text" 
-              placeholder={i18n.language === 'es' ? 'Filtrar por nombre...' : 'Filter by name...'}
+              placeholder={isSpanish ? 'Filtrar por nombre...' : 'Filter by name...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-slate-950 border border-white/5 rounded-2xl pl-12 pr-4 py-3 text-sm focus:border-amber-500 outline-none transition-all"
@@ -310,8 +313,15 @@ export const Catalog = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" ref={catalogRef}>
           {filteredItems.map((item) => (
             <div key={item.id} className="group bg-slate-900 border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col hover:border-amber-500/50 transition-all duration-500">
-              <div className="h-64 overflow-hidden relative">
-                <img src={`${item.image}&w=600&h=400&fit=crop`} alt={item.name_es} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              <div className="h-64 overflow-hidden relative bg-slate-950/50">
+                <img 
+                  src={`${item.image}&w=600&h=400&fit=crop`} 
+                  alt={isSpanish ? item.name_es : item.name_en} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1549490349-8643362247b5?q=80&w=800'; // Elegant furniture placeholder
+                  }}
+                />
                 <div className="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-4 py-1 rounded-full border border-white/10">
                   <span className="text-[9px] font-black uppercase tracking-widest text-amber-500">
                     {t(`catalog.categories.${item.category}`)}
@@ -321,10 +331,10 @@ export const Catalog = () => {
               
               <div className="p-8 flex-grow flex flex-col">
                 <h3 className="text-2xl font-black mb-4 leading-tight group-hover:text-amber-500 transition-colors">
-                  {i18n.language === 'es' ? item.name_es : item.name_en}
+                  {isSpanish ? item.name_es : item.name_en}
                 </h3>
                 <p className="text-slate-400 text-sm mb-8 line-clamp-3 font-light leading-relaxed">
-                  {i18n.language === 'es' ? item.description_es : item.description_en}
+                  {isSpanish ? item.description_es : item.description_en}
                 </p>
                 
                 <button 
@@ -351,7 +361,9 @@ export const Catalog = () => {
         {filteredItems.length === 0 && (
           <div className="text-center py-24">
             <Filter size={48} className="mx-auto text-slate-800 mb-6" />
-            <p className="text-slate-500 uppercase tracking-widest text-xs">No se encontraron resultados</p>
+            <p className="text-slate-500 uppercase tracking-widest text-xs">
+              {isSpanish ? 'No se encontraron resultados' : 'No results found'}
+            </p>
           </div>
         )}
 
