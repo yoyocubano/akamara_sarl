@@ -41,7 +41,7 @@ export const Catalog = () => {
     });
   };
 
-  const generatePDF = async () => {
+  const generatePDF = async (singleItem?: CatalogItem) => {
     setIsGenerating(true);
     const isEs = i18n.language.startsWith('es');
     
@@ -51,6 +51,90 @@ export const Catalog = () => {
       const pageHeight = doc.internal.pageSize.getHeight();
       const margin = 20;
       
+      // If single item, we show a special technical sheet layout
+      if (singleItem) {
+        const name = isEs ? singleItem.name_es : singleItem.name_en;
+        const desc = isEs ? singleItem.description_es : singleItem.description_en;
+        const details = isEs ? singleItem.details_es : singleItem.details_en;
+
+        // Header Background
+        doc.setFillColor(15, 23, 42);
+        doc.rect(0, 0, pageWidth, 60, 'F');
+
+        // Logo / Title
+        doc.setTextColor(245, 158, 11);
+        doc.setFontSize(24);
+        doc.setFont('helvetica', 'bold');
+        doc.text('AKAMARA', margin, 25);
+        
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text(isEs ? 'FICHA TÉCNICA OFICIAL' : 'OFFICIAL TECHNICAL SHEET', margin, 35);
+
+        // Item Image (Large)
+        try {
+          const base64Img = await getBase64ImageFromURL(`${singleItem.image}&w=800&h=600&q=90`);
+          doc.addImage(base64Img, 'JPEG', margin, 70, pageWidth - (margin * 2), 100);
+        } catch (e) {
+          doc.setFillColor(241, 245, 249);
+          doc.rect(margin, 70, pageWidth - (margin * 2), 100, 'F');
+        }
+
+        // Content
+        let y = 185;
+        doc.setTextColor(15, 23, 42);
+        doc.setFontSize(22);
+        doc.setFont('helvetica', 'bold');
+        doc.text(name, margin, y);
+        
+        y += 10;
+        doc.setTextColor(245, 158, 11);
+        doc.setFontSize(10);
+        doc.text(singleItem.type === 'product' ? (isEs ? 'PRODUCTO PREMIUM' : 'PREMIUM PRODUCT') : (isEs ? 'SERVICIO INTEGRAL' : 'INTEGRAL SERVICE'), margin, y);
+
+        y += 15;
+        doc.setTextColor(51, 65, 85);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        const splitDesc = doc.splitTextToSize(desc, pageWidth - (margin * 2));
+        doc.text(splitDesc, margin, y);
+        
+        y += (splitDesc.length * 7) + 10;
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(15, 23, 42);
+        doc.text(isEs ? 'ESPECIFICACIONES TÉCNICAS:' : 'TECHNICAL SPECIFICATIONS:', margin, y);
+
+        y += 10;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+        doc.setTextColor(71, 85, 105);
+        details.forEach((detail) => {
+          doc.text(`• ${detail}`, margin + 5, y);
+          y += 8;
+        });
+
+        // Contact Info Box at Bottom
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(margin, pageHeight - 50, pageWidth - (margin * 2), 35, 3, 3, 'F');
+        
+        doc.setTextColor(15, 23, 42);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text(isEs ? 'SOLICITAR MÁS INFORMACIÓN:' : 'REQUEST MORE INFO:', margin + 5, pageHeight - 40);
+        
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.text(`WhatsApp: ${LEGAL_INFO.contact.phone} | Email: ${LEGAL_INFO.contact.email}`, margin + 5, pageHeight - 32);
+        doc.text(`NIT: ${LEGAL_INFO.nit} | Akamara S.U.R.L. 2026`, margin + 5, pageHeight - 25);
+
+        doc.save(`AKAMARA_${singleItem.id.toUpperCase()}_${i18n.language.toUpperCase()}.pdf`);
+        setIsGenerating(false);
+        return;
+      }
+
+      // --- MULTI-ITEM CATALOG (Existing logic) ---
       // --- PAGE 1: COVER ---
       doc.setFillColor(15, 23, 42); // slate-900
       doc.rect(0, 0, pageWidth, pageHeight, 'F');
@@ -116,7 +200,7 @@ export const Catalog = () => {
       doc.text(splitPhilosophy, margin, 65);
 
       // --- PRODUCT PAGES ---
-      let y = 30;
+      let yp = 30;
       doc.addPage();
       
       // Group items by category for the PDF
@@ -127,23 +211,23 @@ export const Catalog = () => {
         if (catItems.length === 0) continue;
 
         // Category Header
-        if (y > pageHeight - 60) {
+        if (yp > pageHeight - 60) {
           doc.addPage();
-          y = 30;
+          yp = 30;
         }
 
         doc.setFillColor(248, 250, 252); // slate-50
-        doc.rect(0, y - 10, pageWidth, 20, 'F');
+        doc.rect(0, yp - 10, pageWidth, 20, 'F');
         doc.setTextColor(15, 23, 42);
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
-        doc.text(t(`catalog.categories.${cat}`).toUpperCase(), margin, y + 3);
-        y += 25;
+        doc.text(t(`catalog.categories.${cat}`).toUpperCase(), margin, yp + 3);
+        yp += 25;
 
         for (const item of catItems) {
-          if (y > pageHeight - 100) {
+          if (yp > pageHeight - 100) {
             doc.addPage();
-            y = 30;
+            yp = 30;
           }
 
           const name = isEs ? item.name_es : item.name_en;
@@ -153,50 +237,50 @@ export const Catalog = () => {
           // Item Box Border
           doc.setDrawColor(241, 245, 249);
           doc.setLineWidth(0.2);
-          doc.roundedRect(margin - 5, y - 5, pageWidth - (margin * 2) + 10, 85, 3, 3);
+          doc.roundedRect(margin - 5, yp - 5, pageWidth - (margin * 2) + 10, 85, 3, 3);
 
           // Image
           try {
             const base64Img = await getBase64ImageFromURL(`${item.image}&w=400&h=300&q=80`);
-            doc.addImage(base64Img, 'JPEG', margin, y, 55, 60);
+            doc.addImage(base64Img, 'JPEG', margin, yp, 55, 60);
           } catch (e) {
             doc.setFillColor(241, 245, 249);
-            doc.rect(margin, y, 55, 60, 'F');
+            doc.rect(margin, yp, 55, 60, 'F');
             doc.setFontSize(8);
-            doc.text('N/A', margin + 25, y + 30);
+            doc.text('N/A', margin + 25, yp + 30);
           }
 
           // Item Info
           doc.setTextColor(15, 23, 42);
           doc.setFontSize(14);
           doc.setFont('helvetica', 'bold');
-          doc.text(name, margin + 65, y + 10);
+          doc.text(name, margin + 65, yp + 10);
           
           doc.setFontSize(9);
           doc.setTextColor(245, 158, 11);
-          doc.text(item.type === 'product' ? (isEs ? 'PRODUCTO PREMIUM' : 'PREMIUM PRODUCT') : (isEs ? 'SERVICIO INTEGRAL' : 'INTEGRAL SERVICE'), margin + 65, y + 16);
+          doc.text(item.type === 'product' ? (isEs ? 'PRODUCTO PREMIUM' : 'PREMIUM PRODUCT') : (isEs ? 'SERVICIO INTEGRAL' : 'INTEGRAL SERVICE'), margin + 65, yp + 16);
           
           doc.setTextColor(71, 85, 105);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(10);
           const splitDesc = doc.splitTextToSize(desc, pageWidth - margin - 65 - margin);
-          doc.text(splitDesc, margin + 65, y + 24);
+          doc.text(splitDesc, margin + 65, yp + 24);
 
           // Details / Bullet points
           doc.setFontSize(8);
           doc.setFont('helvetica', 'bold');
           doc.setTextColor(15, 23, 42);
-          doc.text(isEs ? 'ESPECIFICACIONES:' : 'SPECIFICATIONS:', margin + 65, y + 40);
+          doc.text(isEs ? 'ESPECIFICACIONES:' : 'SPECIFICATIONS:', margin + 65, yp + 40);
           
           doc.setFont('helvetica', 'normal');
           doc.setTextColor(100, 116, 139);
-          let detailY = y + 45;
+          let detailY = yp + 45;
           details.forEach((detail) => {
             doc.text(`• ${detail}`, margin + 68, detailY);
             detailY += 5;
           });
 
-          y += 95;
+          yp += 95;
         }
       }
 
@@ -352,22 +436,35 @@ export const Catalog = () => {
                   {isSpanish ? item.description_es : item.description_en}
                 </p>
                 
-                <button 
-                  onClick={() => handleAction(item)}
-                  className="mt-auto flex items-center justify-center space-x-3 w-full py-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group/btn"
-                >
-                  {item.type === 'product' ? (
-                    <>
-                      <ShoppingCart size={18} className="text-amber-500 group-hover/btn:scale-110 transition-transform" />
-                      <span className="text-[10px] font-black uppercase tracking-widest">{t('catalog.actions.buy')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <MessageSquare size={18} className="text-blue-500 group-hover/btn:scale-110 transition-transform" />
-                      <span className="text-[10px] font-black uppercase tracking-widest">{t('catalog.actions.contact')}</span>
-                    </>
-                  )}
-                </button>
+                <div className="mt-auto space-y-3">
+                  <button 
+                    onClick={() => handleAction(item)}
+                    className="flex items-center justify-center space-x-3 w-full py-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group/btn"
+                  >
+                    {item.type === 'product' ? (
+                      <>
+                        <ShoppingCart size={18} className="text-amber-500 group-hover/btn:scale-110 transition-transform" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">{t('catalog.actions.buy')}</span>
+                      </>
+                    ) : (
+                      <>
+                        <MessageSquare size={18} className="text-blue-500 group-hover/btn:scale-110 transition-transform" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">{t('catalog.actions.contact')}</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button 
+                    onClick={() => generatePDF(item)}
+                    disabled={isGenerating}
+                    className="flex items-center justify-center space-x-3 w-full py-3 bg-slate-950/50 border border-white/5 rounded-2xl hover:border-amber-500/50 transition-all group/pdf text-slate-400 hover:text-white"
+                  >
+                    <Download size={14} className="group-hover/pdf:translate-y-1 transition-transform" />
+                    <span className="text-[9px] font-bold uppercase tracking-[0.2em]">
+                      {isSpanish ? 'FICHA TÉCNICA (PDF)' : 'TECHNICAL SHEET (PDF)'}
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           ))}
