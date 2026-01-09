@@ -47,8 +47,7 @@ export const AnaliticaDeClientes = {
             visitor_id: visitorId,
             page: path,
             screen_size: `${window.innerWidth}x${window.innerHeight}`,
-            user_agent: navigator.userAgent?.substring(0, 250) || 'unknown',
-            timestamp: new Date().toISOString()
+            user_agent: navigator.userAgent?.substring(0, 250) || 'unknown'
         };
 
         console.log('📊 Analítica de Clientes: Registrando visita...', payload.page);

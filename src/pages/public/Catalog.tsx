@@ -134,7 +134,7 @@ export const Catalog = () => {
         doc.text(`WhatsApp: ${LEGAL_INFO.contact.phone} | Email: ${LEGAL_INFO.contact.email}`, margin + 5, pageHeight - 32);
         doc.text(`NIT: ${LEGAL_INFO.nit} | Akamara S.U.R.L. 2026`, margin + 5, pageHeight - 25);
 
-        doc.save(`AKAMARA_${singleItem.id.toUpperCase()}_${i18n.language.toUpperCase()}.pdf`);
+        doc.save(`AKAMARA_${(singleItem.id || 'ITEM').toUpperCase()}_${(i18n.language || 'es').toUpperCase()}.pdf`);
         setIsGenerating(false);
         return;
       }
@@ -226,7 +226,7 @@ export const Catalog = () => {
         doc.setTextColor(15, 23, 42);
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
-        doc.text(t(`catalog.categories.${cat}`).toUpperCase(), margin, yp + 3);
+        doc.text(String(t(`catalog.categories.${cat}`) || cat).toUpperCase(), margin, yp + 3);
         yp += 25;
 
         for (const item of catItems) {
@@ -325,7 +325,7 @@ export const Catalog = () => {
         : '© 2026 AKAMARA S.U.R.L. All rights reserved. Product specifications may vary without prior notice.';
       doc.text(legalFooter, pageWidth / 2, 280, { align: 'center' });
 
-      doc.save(`AKAMARA_CATALOG_2026_${i18n.language.toUpperCase()}.pdf`);
+      doc.save(`AKAMARA_CATALOG_2026_${(i18n.language || 'es').toUpperCase()}.pdf`);
     } catch (error) {
       console.error('Error generating detailed PDF:', error);
       alert('Error técnico al generar el documento. Asegúrese de tener conexión a internet para cargar las imágenes corporativas.');
