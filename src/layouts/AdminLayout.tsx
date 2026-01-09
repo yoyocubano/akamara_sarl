@@ -40,11 +40,16 @@ const AICreditBalance = () => {
     const percentage = balance !== null ? Math.min(Math.max((balance / 2.0) * 100, 0), 100) : 0;
 
     return (
-        <div className="px-4 py-4 mx-4 mt-2 bg-slate-900 border border-white/5 rounded-xl shadow-inner">
+        <a
+            href="https://platform.deepseek.com/top_up"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block px-4 py-4 mx-4 mt-2 bg-slate-900 border border-white/5 rounded-xl shadow-inner hover:bg-slate-800 transition-all group/credit"
+        >
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                     <Sparkles className={`w-3 h-3 ${isExhausted ? 'text-red-500' : 'text-amber-500'}`} />
-                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Crédito IA</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover/credit:text-amber-400 transition-colors">Crédito IA</span>
                 </div>
                 {isExhausted && <AlertCircle className="w-3 h-3 text-red-500 animate-pulse" />}
             </div>
@@ -62,10 +67,10 @@ const AICreditBalance = () => {
                     style={{ width: `${percentage}%` }}
                 ></div>
             </div>
-            <p className="text-[8px] text-slate-500 mt-2 leading-tight">
-                {isExhausted ? '⚠ Crédito agotado. Recarga en DeepSeek.' : 'Sincronizado con DeepSeek API.'}
+            <p className="text-[8px] text-slate-500 mt-2 leading-tight group-hover/credit:text-slate-300 transition-colors">
+                {isExhausted ? '⚠ Crédito agotado. Toca para recargar.' : 'Sincronizado. Toca para gestionar.'}
             </p>
-        </div>
+        </a>
     );
 };
 
