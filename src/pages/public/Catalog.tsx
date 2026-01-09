@@ -21,7 +21,6 @@ export const Catalog = () => {
     return matchesFilter && matchesSearch;
   });
 
-  // Helper to convert image URL to Base64
   const getBase64ImageFromURL = (url: string): Promise<string> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -32,131 +31,198 @@ export const Catalog = () => {
         canvas.height = img.height;
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(img, 0, 0);
-        const dataURL = canvas.toDataURL('image/jpeg');
+        const dataURL = canvas.toDataURL('image/jpeg', 0.8);
         resolve(dataURL);
       };
-      img.onerror = (error) => reject(error);
+      img.onerror = () => reject('Error loading image');
       img.src = url;
     });
   };
 
   const generatePDF = async () => {
     setIsGenerating(true);
+    const isEs = i18n.language === 'es';
+    
     try {
       const doc = new jsPDF('p', 'mm', 'a4');
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 20;
       
-      // Cover Page
+      // --- PAGE 1: COVER ---
       doc.setFillColor(15, 23, 42); // slate-900
       doc.rect(0, 0, pageWidth, pageHeight, 'F');
       
-      doc.setTextColor(245, 158, 11); // amber-500
-      doc.setFontSize(40);
+      // Decorative elements
+      doc.setDrawColor(245, 158, 11); // amber-500
+      doc.setLineWidth(0.5);
+      doc.line(margin, margin, pageWidth - margin, margin);
+      doc.line(margin, pageHeight - margin, pageWidth - margin, pageHeight - margin);
+      
+      doc.setTextColor(245, 158, 11);
+      doc.setFontSize(54);
       doc.setFont('helvetica', 'bold');
-      doc.text('AKAMARA', pageWidth / 2, 80, { align: 'center' });
+      doc.text('AKAMARA', pageWidth / 2, 90, { align: 'center' });
       
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(20);
-      doc.text('CATÁLOGO CORPORATIVO', pageWidth / 2, 100, { align: 'center' });
+      doc.setFontSize(22);
+      doc.text(isEs ? 'CATÁLOGO CORPORATIVO' : 'CORPORATE CATALOG', pageWidth / 2, 110, { align: 'center' });
+      
       doc.setFontSize(14);
       doc.setFont('helvetica', 'normal');
-      doc.text('Mobiliario & Soluciones Logísticas', pageWidth / 2, 110, { align: 'center' });
+      doc.text(isEs ? 'Mobiliario de Diseño, Construcción y Logística' : 'Designer Furniture, Construction & Logistics', pageWidth / 2, 125, { align: 'center' });
       
       doc.setFontSize(10);
-      doc.text(`Edición ${new Date().getFullYear()}`, pageWidth / 2, 140, { align: 'center' });
+      doc.setTextColor(148, 163, 184); // slate-400
+      doc.text(isEs ? `Edición Oficial ${new Date().getFullYear()}` : `Official Edition ${new Date().getFullYear()}`, pageWidth / 2, 150, { align: 'center' });
       
-      // Info Box at bottom of cover
-      doc.setDrawColor(245, 158, 11);
-      doc.line(40, 250, 170, 250);
-      doc.setFontSize(8);
-      doc.text(`PROYECTO AKAMARA S.U.R.L. | NIT: ${LEGAL_INFO.nit}`, pageWidth / 2, 260, { align: 'center' });
+      // Secondary Cover Text
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(12);
+      const introText = isEs 
+        ? 'Este documento contiene nuestra selección exclusiva de productos y servicios integrales para el mercado cubano, diseñados bajo estándares internacionales de calidad y estética.'
+        : 'This document contains our exclusive selection of products and comprehensive services for the Cuban market, designed under international standards of quality and aesthetics.';
+      const splitIntro = doc.splitTextToSize(introText, pageWidth - (margin * 4));
+      doc.text(splitIntro, pageWidth / 2, 200, { align: 'center' });
 
-      // Start Items
+      // --- PAGE 2: ABOUT / PHILOSOPHY ---
+      doc.addPage();
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, pageWidth, pageHeight, 'F');
+      
+      // Side accent
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, 5, pageHeight, 'F');
+      
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(28);
+      doc.setFont('helvetica', 'bold');
+      doc.text(isEs ? 'Nuestra Filosofía' : 'Our Philosophy', margin, 40);
+      
+      doc.setDrawColor(245, 158, 11);
+      doc.setLineWidth(1.5);
+      doc.line(margin, 45, 60, 45);
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(51, 65, 85);
+      const philosophyText = isEs
+        ? 'AKAMARA S.U.R.L. nace con la visión de fusionar la tradición artesanal cubana con la eficiencia técnica moderna. "Antes del tiempo, Akamara" no es solo un slogan, es nuestra promesa de permanencia y vanguardia.\n\nOperamos cinco divisiones estratégicas:\n\n1. ESTRATEGIA: Consultoría integral.\n2. MOBILIARIO: Diseño y fabricación de alto estándar.\n3. CONSTRUCCIÓN: Solidez y acabados de lujo.\n4. GASTRONOMÍA: Catering de autor y profundidad de sabor.\n5. LOGÍSTICA: El camino seguro para sus recursos.'
+        : 'AKAMARA S.U.R.L. was born with the vision of merging Cuban artisanal tradition with modern technical efficiency. "Before time, Akamara" is not just a slogan, it is our promise of permanence and vanguard.\n\nWe operate five strategic divisions:\n\n1. STRATEGY: Comprehensive consulting.\n2. FURNITURE: High-standard design and manufacturing.\n3. CONSTRUCTION: Solidity and luxury finishes.\n4. GASTRONOMY: Signature catering and depth of flavor.\n5. LOGISTICS: The safe path for your resources.';
+      
+      const splitPhilosophy = doc.splitTextToSize(philosophyText, pageWidth - (margin * 2.5));
+      doc.text(splitPhilosophy, margin, 65);
+
+      // --- PRODUCT PAGES ---
       let y = 30;
       doc.addPage();
       
-      for (const [index, item] of CATALOG_DATA.entries()) {
-        const name = i18n.language === 'es' ? item.name_es : item.name_en;
-        const desc = i18n.language === 'es' ? item.description_es : item.description_en;
-        
-        // Check if we need a new page (each item takes approx 70mm)
-        if (y > 220) {
+      // Group items by category for the PDF
+      const categoriesOrder = ['seats', 'tables', 'habitational', 'outdoor', 'office', 'special', 'services'];
+      
+      for (const cat of categoriesOrder) {
+        const catItems = CATALOG_DATA.filter(i => i.category === cat);
+        if (catItems.length === 0) continue;
+
+        // Category Header
+        if (y > pageHeight - 60) {
           doc.addPage();
           y = 30;
         }
 
-        // Header per page if first item on page
-        if (y === 30) {
-            doc.setFillColor(15, 23, 42);
-            doc.rect(0, 0, pageWidth, 20, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(10);
-            doc.text(`CATÁLOGO AKAMARA - ${new Date().getFullYear()}`, 15, 13);
-        }
-
-        y += 10;
-
-        // Image handling
-        try {
-            const base64Img = await getBase64ImageFromURL(`${item.image}&w=400&h=300&fit=crop`);
-            doc.addImage(base64Img, 'JPEG', 15, y, 50, 40);
-        } catch (e) {
-            doc.setDrawColor(200, 200, 200);
-            doc.rect(15, y, 50, 40);
-            doc.text('Imagen no disponible', 20, y + 20);
-        }
-
-        // Text Content
+        doc.setFillColor(248, 250, 252); // slate-50
+        doc.rect(0, y - 10, pageWidth, 20, 'F');
         doc.setTextColor(15, 23, 42);
-        doc.setFontSize(14);
+        doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
-        doc.text(name, 70, y + 5);
-        
-        doc.setFontSize(9);
-        doc.setTextColor(245, 158, 11);
-        doc.text(t(`catalog.categories.${item.category}`).toUpperCase(), 70, y + 11);
-        
-        doc.setTextColor(71, 85, 105);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        const splitDesc = doc.splitTextToSize(desc, 110);
-        doc.text(splitDesc, 70, y + 18);
-        
-        // Badge type
-        doc.setFillColor(item.type === 'product' ? 240 : 230, 240, 255);
-        doc.roundedRect(170, y + 2, 25, 6, 1, 1, 'F');
-        doc.setFontSize(7);
-        doc.setTextColor(50, 50, 150);
-        doc.text(item.type.toUpperCase(), 182.5, y + 6, { align: 'center' });
+        doc.text(t(`catalog.categories.${cat}`).toUpperCase(), margin, y + 3);
+        y += 25;
 
-        y += 55;
-        
-        // Thin Separator
-        doc.setDrawColor(226, 232, 240);
-        doc.line(15, y - 5, 195, y - 5);
+        for (const item of catItems) {
+          if (y > pageHeight - 80) {
+            doc.addPage();
+            y = 30;
+          }
+
+          const name = isEs ? item.name_es : item.name_en;
+          const desc = isEs ? item.description_es : item.description_en;
+
+          // Item Box Border
+          doc.setDrawColor(241, 245, 249);
+          doc.setLineWidth(0.2);
+          doc.roundedRect(margin - 5, y - 5, pageWidth - (margin * 2) + 10, 60, 3, 3);
+
+          // Image
+          try {
+            const base64Img = await getBase64ImageFromURL(`${item.image}&w=400&h=300&q=80`);
+            doc.addImage(base64Img, 'JPEG', margin, y, 45, 50);
+          } catch (e) {
+            doc.setFillColor(241, 245, 249);
+            doc.rect(margin, y, 45, 50, 'F');
+            doc.setFontSize(8);
+            doc.text('N/A', margin + 20, y + 25);
+          }
+
+          // Item Info
+          doc.setTextColor(15, 23, 42);
+          doc.setFontSize(14);
+          doc.setFont('helvetica', 'bold');
+          doc.text(name, margin + 55, y + 10);
+          
+          doc.setFontSize(9);
+          doc.setTextColor(245, 158, 11);
+          doc.text(item.type === 'product' ? (isEs ? 'PRODUCTO PREMIUM' : 'PREMIUM PRODUCT') : (isEs ? 'SERVICIO INTEGRAL' : 'INTEGRAL SERVICE'), margin + 55, y + 16);
+          
+          doc.setTextColor(71, 85, 105);
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(11);
+          const splitDesc = doc.splitTextToSize(desc, pageWidth - margin - 55 - margin);
+          doc.text(splitDesc, margin + 55, y + 25);
+
+          y += 70;
+        }
       }
 
-      // Final Page with Contact
+      // --- FINAL PAGE: CONTACT ---
       doc.addPage();
       doc.setFillColor(15, 23, 42);
       doc.rect(0, 0, pageWidth, pageHeight, 'F');
+      
+      doc.setTextColor(245, 158, 11);
+      doc.setFontSize(36);
+      doc.setFont('helvetica', 'bold');
+      doc.text(isEs ? 'CONTÁCTENOS' : 'CONTACT US', pageWidth / 2, 60, { align: 'center' });
+      
+      doc.setDrawColor(245, 158, 11);
+      doc.line(pageWidth / 2 - 30, 70, pageWidth / 2 + 30, 70);
+      
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(30);
-      doc.text('CONTACTO', pageWidth / 2, 60, { align: 'center' });
+      doc.setFontSize(18);
+      doc.text(LEGAL_INFO.contact.person, pageWidth / 2, 90, { align: 'center' });
       
       doc.setFontSize(14);
-      doc.text(LEGAL_INFO.contact.person, pageWidth / 2, 80, { align: 'center' });
-      doc.setTextColor(245, 158, 11);
-      doc.text(LEGAL_INFO.contact.phone, pageWidth / 2, 90, { align: 'center' });
-      doc.setTextColor(255, 255, 255);
-      doc.text(LEGAL_INFO.contact.email, pageWidth / 2, 100, { align: 'center' });
-      doc.text(LEGAL_INFO.location, pageWidth / 2, 110, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.text(`WhatsApp: ${LEGAL_INFO.contact.phone}`, pageWidth / 2, 110, { align: 'center' });
+      doc.text(`Email: ${LEGAL_INFO.contact.email}`, pageWidth / 2, 120, { align: 'center' });
+      
+      doc.setFontSize(12);
+      doc.setTextColor(148, 163, 184);
+      const addressText = `${LEGAL_INFO.location}\nLa Habana, Cuba`;
+      doc.text(addressText, pageWidth / 2, 140, { align: 'center' });
+      
+      doc.text(`NIT: ${LEGAL_INFO.nit}`, pageWidth / 2, 160, { align: 'center' });
 
-      doc.save(`Akamara_Catalogo_Completo_${i18n.language.toUpperCase()}.pdf`);
+      // Footer legal
+      doc.setFontSize(8);
+      const legalFooter = isEs 
+        ? '© 2026 AKAMARA S.U.R.L. Todos los derechos reservados. Las especificaciones de los productos pueden variar sin previo aviso.'
+        : '© 2026 AKAMARA S.U.R.L. All rights reserved. Product specifications may vary without prior notice.';
+      doc.text(legalFooter, pageWidth / 2, 280, { align: 'center' });
+
+      doc.save(`AKAMARA_CATALOG_2026_${i18n.language.toUpperCase()}.pdf`);
     } catch (error) {
-      console.error('PDF Generation Error:', error);
-      alert('Error al generar el PDF. Por favor, intente de nuevo.');
+      console.error('Error generating detailed PDF:', error);
+      alert('Error técnico al generar el documento. Asegúrese de tener conexión a internet para cargar las imágenes corporativas.');
     } finally {
       setIsGenerating(false);
     }
@@ -178,7 +244,7 @@ export const Catalog = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8 text-center md:text-left">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
           <div>
             <Link to="/" className="inline-flex items-center gap-2 text-amber-500 hover:text-amber-400 transition-colors mb-4 font-bold uppercase tracking-widest text-[10px]">
               <ArrowLeft size={14} />
@@ -193,16 +259,21 @@ export const Catalog = () => {
           <button 
             onClick={generatePDF}
             disabled={isGenerating}
-            className={`group flex items-center space-x-3 bg-white/5 border border-white/10 px-8 py-4 rounded-full hover:bg-amber-500 hover:text-slate-950 transition-all duration-500 ${isGenerating ? 'opacity-50 cursor-wait' : ''}`}
+            className={`group flex items-center space-x-4 bg-white/5 border border-white/10 px-10 py-5 rounded-full hover:bg-amber-500 hover:text-slate-950 transition-all duration-700 shadow-2xl ${isGenerating ? 'opacity-50 cursor-wait' : ''}`}
           >
             {isGenerating ? (
-              <Loader2 size={18} className="animate-spin" />
+              <Loader2 size={24} className="animate-spin" />
             ) : (
-              <Download size={18} className="group-hover:animate-bounce" />
+              <Download size={24} className="group-hover:translate-y-1 transition-transform" />
             )}
-            <span className="text-xs font-black uppercase tracking-widest">
-              {isGenerating ? 'Generando PDF...' : t('catalog.download_pdf')}
-            </span>
+            <div className="flex flex-col items-start">
+              <span className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">
+                {isGenerating ? (i18n.language === 'es' ? 'PROCESANDO...' : 'PROCESSING...') : (i18n.language === 'es' ? 'OBTENER ARCHIVO' : 'GET FILE')}
+              </span>
+              <span className="text-xs font-bold opacity-70 leading-none">
+                {i18n.language === 'es' ? 'Catálogo 2026 (Premium PDF)' : '2026 Catalog (Premium PDF)'}
+              </span>
+            </div>
           </button>
         </div>
 
@@ -227,7 +298,7 @@ export const Catalog = () => {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
             <input 
               type="text" 
-              placeholder={t('contact_section.labels.name') || 'Buscar productos o servicios...'}
+              placeholder={i18n.language === 'es' ? 'Filtrar por nombre...' : 'Filter by name...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-slate-950 border border-white/5 rounded-2xl pl-12 pr-4 py-3 text-sm focus:border-amber-500 outline-none transition-all"
@@ -238,9 +309,9 @@ export const Catalog = () => {
         {/* Catalog Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" ref={catalogRef}>
           {filteredItems.map((item) => (
-            <div key={item.id} className="group bg-slate-900 border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col hover:border-amber-500/50 transition-all duration-500 shadow-xl">
+            <div key={item.id} className="group bg-slate-900 border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col hover:border-amber-500/50 transition-all duration-500">
               <div className="h-64 overflow-hidden relative">
-                <img src={`${item.image}&w=600&h=400&fit=crop`} alt={item.name_es} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                <img src={`${item.image}&w=600&h=400&fit=crop`} alt={item.name_es} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-4 py-1 rounded-full border border-white/10">
                   <span className="text-[9px] font-black uppercase tracking-widest text-amber-500">
                     {t(`catalog.categories.${item.category}`)}
