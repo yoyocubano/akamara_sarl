@@ -5,7 +5,7 @@ import { Search, Download, ShoppingCart, MessageSquare, ArrowLeft, Filter, Loade
 import { Link } from 'react-router-dom';
 import { CATALOG_DATA, CatalogItem } from '../../data/catalog';
 import { LEGAL_INFO } from '../../constants';
-import { jsPDF } from 'jspdf';
+import jsPDF from 'jspdf';
 
 export const Catalog = () => {
   const { t, i18n } = useTranslation();
@@ -268,7 +268,7 @@ export const Catalog = () => {
           doc.setTextColor(71, 85, 105);
           doc.setFont('helvetica', 'normal');
           doc.setFontSize(10);
-          const splitDesc = doc.splitTextToSize(desc, pageWidth - margin - 65 - margin);
+          const splitDesc = doc.splitTextToSize(String(desc || ''), pageWidth - margin - 65 - margin);
           doc.text(splitDesc, margin + 65, yp + 24);
 
           // Details / Bullet points
