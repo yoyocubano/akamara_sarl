@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Activity, Mail, CheckCircle, Database, Server, Users, Eye } from 'lucide-react';
+import { Activity, Mail, CheckCircle, Database, Users, Eye } from 'lucide-react';
 import { databases, APPWRITE_CONFIG } from '../../lib/appwrite';
 import { Query } from 'appwrite';
 
@@ -43,10 +43,33 @@ const StatusDashboard = () => {
                 [Query.greaterThan('$createdAt', twentyFourHoursAgo)]
             );
 
+            // 4. Fetch Email/Form Interactions (Last 7 Days)
+            const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+            
+            // Emails
+            const emailDocs = await databases.listDocuments(
+                APPWRITE_CONFIG.DATABASE_ID,
+                APPWRITE_CONFIG.COLLECTIONS.ANALYTICS,
+                [
+                    Query.greaterThan('$createdAt', sevenDaysAgo),
+                    Query.equal('page', 'EVENT:email_click')
+                ]
+            );
+
+            // Forms
+            const formDocs = await databases.listDocuments(
+                APPWRITE_CONFIG.DATABASE_ID,
+                APPWRITE_CONFIG.COLLECTIONS.ANALYTICS,
+                [
+                    Query.greaterThan('$createdAt', sevenDaysAgo),
+                    Query.equal('page', 'EVENT:form_submit')
+                ]
+            );
+
             setStats({
                 liveVisitors: liveDocs.total,
                 totalVisits24h: dayDocs.total,
-                messageCount: 12 // Placeholder
+                messageCount: emailDocs.total + formDocs.total
             });
         } catch (error) {
             console.error(error);
@@ -108,7 +131,7 @@ const StatusDashboard = () => {
                         )}
                     </div>
                     <h3 className="text-slate-400 text-sm uppercase font-bold tracking-wider">Base de Datos</h3>
-                    <p className="text-xl font-black text-white mt-1">Supabase</p>
+                    <p className="text-xl font-black text-white mt-1">Appwrite</p>
                 </div>
 
                  {/* Message Log */}
@@ -117,10 +140,13 @@ const StatusDashboard = () => {
                         <div className="p-3 bg-slate-800 rounded-lg">
                             <Mail className="w-6 h-6 text-purple-400" />
                         </div>
-                        <span className="text-slate-500 text-xs font-bold uppercase">30 días</span>
+                        <span className="text-slate-500 text-xs font-bold uppercase">7 días</span>
                     </div>
-                    <h3 className="text-slate-400 text-sm uppercase font-bold tracking-wider">Mensajes</h3>
-                    <p className="text-xl font-black text-white mt-1">{stats.messageCount}</p>
+                    <h3 className="text-slate-400 text-sm uppercase font-bold tracking-wider">Contactos</h3>
+                    <div className="flex items-baseline gap-2 mt-1">
+                        <span className="text-xl font-black text-white">{stats.messageCount}</span>
+                        <span className="text-[10px] text-slate-500 font-bold uppercase">Total</span>
+                    </div>
                 </div>
             </div>
 

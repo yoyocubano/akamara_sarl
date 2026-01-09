@@ -96,7 +96,7 @@ const SettingsManager = () => {
                                 <label className="block text-slate-400 text-xs uppercase tracking-widest font-bold mb-2">Título del Sitio</label>
                                 <input
                                     name="site_title"
-                                    value={formData.site_title}
+                                    value={String(formData.site_title || '')}
                                     onChange={handleChange}
                                     className="w-full bg-black/40 border border-white/10 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-amber-500 transition-colors"
                                 />
@@ -105,7 +105,7 @@ const SettingsManager = () => {
                                 <label className="block text-slate-400 text-xs uppercase tracking-widest font-bold mb-2">Slogan</label>
                                 <input
                                     name="site_slogan"
-                                    value={formData.site_slogan}
+                                    value={String(formData.site_slogan || '')}
                                     onChange={handleChange}
                                     className="w-full bg-black/40 border border-white/10 text-white px-4 py-3 rounded-lg focus:outline-none focus:border-amber-500 transition-colors"
                                 />
@@ -127,7 +127,7 @@ const SettingsManager = () => {
                                     <input
                                         name="contact_email"
                                         type="email"
-                                        value={formData.contact_email}
+                                        value={String(formData.contact_email || '')}
                                         onChange={handleChange}
                                         className="w-full bg-black/40 border border-white/10 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:border-amber-500 transition-colors"
                                     />
@@ -138,9 +138,7 @@ const SettingsManager = () => {
                                 <div className="relative">
                                     <Phone className="absolute left-3 top-3.5 w-5 h-5 text-slate-500" />
                                     <input
-                                        name="contact_phone"
-                                        value={formData.contact_phone}
-                                        onChange={handleChange}
+                                        value={String(formData.contact_phone || '')}
                                         className="w-full bg-black/40 border border-white/10 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:border-amber-500 transition-colors"
                                     />
                                 </div>

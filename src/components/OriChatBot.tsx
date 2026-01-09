@@ -1,6 +1,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { X, Send, Sparkles, Loader2 } from "lucide-react";
+import { databases, APPWRITE_CONFIG } from "../lib/appwrite";
+import { Query } from "appwrite";
 
 interface Message {
     role: "user" | "assistant" | "system";
@@ -91,11 +93,60 @@ export default function OriChatBot() {
 
     const getCurrentTime = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+    const [dynamicPrompt, setDynamicPrompt] = useState("");
+    const DAILY_LIMIT = 20; // Message limit per user/day
+    
+    // Check Limits
+    const checkLimit = () => {
+        const today = new Date().toDateString();
+        const usage = JSON.parse(localStorage.getItem('akamara_chat_usage') || '{}');
+        
+        if (usage.date !== today) {
+            usage.date = today;
+            usage.count = 0;
+        }
+        
+        if (usage.count >= DAILY_LIMIT) return false;
+        
+        usage.count++;
+        localStorage.setItem('akamara_chat_usage', JSON.stringify(usage));
+        return true;
+    };
+
+    // Fetch Dynamic Prompt from Appwrite
+    useEffect(() => {
+        const fetchPrompt = async () => {
+            try {
+                // Fetch System Prompt from Settings
+                const docs = await databases.listDocuments(
+                    APPWRITE_CONFIG.DATABASE_ID,
+                    APPWRITE_CONFIG.COLLECTIONS.SETTINGS,
+                    [Query.equal('key', 'chatbot_system_prompt')]
+                );
+                
+                if (docs.total > 0) {
+                   setDynamicPrompt(docs.documents[0].value);
+                }
+            } catch (err) {
+                console.warn("Using default system prompt");
+            }
+        };
+        fetchPrompt();
+    }, []);
+
     const fetchDeepSeekResponse = async (chatMessages: Message[]) => {
+        if (!checkLimit()) {
+            return isYuniorMode 
+                ? "Asere, ya hablamos demasiado por hoy. La cuenta no da pa' más. Mañana seguimos." 
+                : "He alcanzado mi límite diario de mensajes. Por favor, contáctenos vía WhatsApp o intente mañana.";
+        }
+
+        const activeSystemPrompt = dynamicPrompt || botIdentity.systemPrompt;
+
         const fullPrompt = [
             {
                 role: "system",
-                content: `${botIdentity.systemPrompt}\n\nCONTEXTO ACTUAL:\n- Fecha: ${now.toLocaleDateString('es-ES')}\n- Hora Local: ${now.toLocaleTimeString('es-ES')}\n- Ubicación: La Habana, Cuba.\n\nIMPORTANTE: No alucines con la fecha ni la hora, usa los datos proporcionados arriba. Saluda adecuadamente según el contexto horario si es necesario.`
+                content: `${activeSystemPrompt}\n\nCONTEXTO ACTUAL:\n- Fecha: ${now.toLocaleDateString('es-ES')}\n- Hora Local: ${now.toLocaleTimeString('es-ES')}\n- Ubicación: La Habana, Cuba.\n\nIMPORTANTE: No alucines con la fecha ni la hora, usa los datos proporcionados arriba. Saluda adecuadamente según el contexto horario si es necesario.`
             },
             ...chatMessages.map(m => ({ role: m.role, content: m.content }))
         ];

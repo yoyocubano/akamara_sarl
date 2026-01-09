@@ -19,7 +19,9 @@ export const APPWRITE_CONFIG = {
     COLLECTIONS: {
         NOVEDADES: 'novedades',
         ANALYTICS: 'analytics_visits',
-        SETTINGS: 'site_settings'
+        SETTINGS: 'site_settings',
+        MOBILIARIO: 'mobiliario',
+        MESSAGES: 'messages'
     },
     BUCKETS: {
         IMAGES: 'images'

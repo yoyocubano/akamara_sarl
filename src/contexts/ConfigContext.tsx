@@ -2,13 +2,24 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { databases, APPWRITE_CONFIG } from '../lib/appwrite';
 
-// ... imports
+interface Config {
+    [key: string]: string | number | boolean;
+}
 
-// ... interfaces
+interface ConfigContextType {
+    config: Config;
+    loading: boolean;
+    refreshConfig: () => Promise<void>;
+}
 
-// ... defaultConfig
+const defaultConfig: Config = {
+    site_name: 'Akamara S.U.R.L.',
+    maintenance_mode: false,
+    contact_email: 'contacto@akamara.cu',
+    phone_number: '+53 52849673',
+};
 
-// ... Context creation
+const ConfigContext = createContext<ConfigContextType | undefined>(undefined);
 
 export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [config, setConfig] = useState<Config>(defaultConfig);
@@ -32,12 +43,6 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             }
         } catch (err) {
             console.warn('Error fetching config, using defaults:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-        } catch (err) {
-            console.error('Unexpected error fetching config:', err);
         } finally {
             setLoading(false);
         }

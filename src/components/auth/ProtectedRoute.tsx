@@ -1,20 +1,26 @@
+
 import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { account } from '../../lib/appwrite';
 import { Sparkles } from 'lucide-react';
-import Login from '../../pages/Login';
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = () => {
     const [loading, setLoading] = useState(true);
-    const [authenticated, setAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         const checkSession = async () => {
             try {
                 await account.get();
-                setAuthenticated(true);
+                setIsAuthenticated(true);
             } catch (error) {
-                setAuthenticated(false);
+                const hasMagicAccess = sessionStorage.getItem('magic_access') === 'true';
+                if (!hasMagicAccess) {
+                   // Redirect will be handled by the render logic or here
+                   setIsAuthenticated(false);
+                } else {
+                    setIsAuthenticated(true);
+                }
             } finally {
                 setLoading(false);
             }
@@ -31,10 +37,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         );
     }
 
-    const hasMagicAccess = sessionStorage.getItem('magic_access') === 'true';
-
-    if (!session && !hasMagicAccess) {
-        return <Login />;
+    if (!isAuthenticated) {
+        // Simple redirect
+        window.location.hash = '#/login';
+        return null;
     }
 
     return <Outlet />;

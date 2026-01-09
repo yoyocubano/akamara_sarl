@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { HashRouter, Routes, Route, Link, useLocation, Outlet } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, Outlet } from 'react-router-dom';
 import { Menu, X, Shield, MapPin, Phone, Mail, FileText, ArrowUpRight, Award, Box, Sparkles, Orbit, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useConfig, ConfigProvider } from './contexts/ConfigContext';
@@ -11,15 +11,13 @@ import Login from './pages/Login';
 import AdminLayout from './layouts/AdminLayout';
 import StatusDashboard from './pages/admin/StatusDashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import NovedadesManager from './pages/admin/NovedadesManager';
-import SettingsManager from './pages/admin/SettingsManager';
-import DivisionDetail from './pages/divisions/DivisionDetail';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
-import OriChatBot from './components/OriChatBot';
-import { WhatsAppButton } from './components/WhatsAppButton';
-
+import Policies from './pages/Policies';
+import MobiliarioManager from './pages/admin/MobiliarioManager';
+import MessagesManager from './pages/admin/MessagesManager';
+import { databases, APPWRITE_CONFIG } from './lib/appwrite';
+import { ID, Query } from 'appwrite';
 // Init
-import { supabase } from './lib/supabase';
+
 import './i18n';
 
 const Navbar = () => {
@@ -35,6 +33,11 @@ const Navbar = () => {
     { name: t('nav.contact'), path: '/contact' },
   ];
 
+  // Close menu when route changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,11 +46,11 @@ const Navbar = () => {
             <Link to="/" className="flex items-center space-x-4 group perspective-[1000px]">
               <div className="relative">
                 <div className="absolute inset-0 bg-amber-500 blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
-                <img src={logo} alt="Akamara Logo" className="relative w-16 h-16 object-contain drop-shadow-2xl logo-beat transition-all duration-300" />
+                <img src={logo} alt="Akamara Logo" className="relative w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-2xl logo-beat transition-all duration-300" />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-black tracking-tighter text-white uppercase group-hover:text-amber-500 transition-colors duration-300">{config.site_title || 'Akamara'}</span>
-                <span className="text-[9px] uppercase tracking-[0.4em] text-slate-400 font-bold">{config.site_slogan || 'Inicio de la Creación'}</span>
+                <span className="text-lg md:text-xl font-black tracking-tighter text-white uppercase group-hover:text-amber-500 transition-colors duration-300">{config.site_title || 'Akamara'}</span>
+                <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-slate-400 font-bold">{config.site_slogan || 'Inicio de la Creación'}</span>
               </div>
             </Link>
           </div>
@@ -67,27 +70,35 @@ const Navbar = () => {
           </div>
 
           <div className="flex md:hidden items-center">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-white hover:text-amber-500 transition-colors">
-              {isOpen ? <X /> : <Menu />}
+            <button 
+              onClick={() => setIsOpen(!isOpen)} 
+              className="text-white hover:text-amber-500 transition-colors p-2"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
       </div>
 
-      {isOpen && (
-        <div className="md:hidden bg-slate-950/95 backdrop-blur-xl border-t border-white/10 p-4 space-y-4 absolute w-full">
+      {/* Mobile Menu Overlay */}
+      <div className={`md:hidden fixed inset-x-0 top-20 bg-slate-950/95 backdrop-blur-2xl border-b border-white/10 transition-all duration-300 ease-in-out transform origin-top ${isOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'} h-screen`}>
+        <div className="p-6 space-y-6 flex flex-col items-center pt-12">
           {links.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               onClick={() => setIsOpen(false)}
-              className="block text-slate-300 text-xs font-bold uppercase tracking-widest py-3 hover:text-amber-500 border-b border-white/5 last:border-0"
+              className="block text-slate-300 text-xl font-black uppercase tracking-widest py-3 hover:text-amber-500 transition-colors"
             >
               {link.name}
             </Link>
           ))}
+          <div className="pt-8 border-t border-white/5 w-full flex justify-center">
+             <span className="text-slate-600 text-xs uppercase tracking-widest">Akamara S.U.R.L.</span>
+          </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
@@ -99,41 +110,42 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-void pt-20">
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-600/10 rounded-full blur-[80px] animate-pulse will-change-opacity"></div>
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[60px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] md:w-[800px] h-[500px] md:h-[800px] bg-amber-600/10 rounded-full blur-[80px] animate-pulse will-change-opacity"></div>
+        <div className="absolute top-1/4 right-1/4 w-64 md:w-96 h-64 md:h-96 bg-blue-600/5 rounded-full blur-[60px]"></div>
         <img
           src="https://images.unsplash.com/photo-1464802686167-b939a67e06a1?auto=format&fit=crop&q=80&w=2000"
           className="w-full h-full object-cover opacity-20 mix-blend-screen"
           alt="Cosmic Energy"
+          loading="eager"
         />
       </div>
 
       <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
         <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full mb-8 backdrop-blur-md hover:bg-white/10 transition-colors">
           <Sparkles className="w-4 h-4 text-amber-500 animate-spin-slow" />
-          <span className="text-[10px] uppercase tracking-[0.4em] font-black text-slate-300">{t('hero.subtitle')}</span>
+          <span className="text-[9px] md:text-[10px] uppercase tracking-[0.4em] font-black text-slate-300">{t('hero.subtitle')}</span>
         </div>
 
-        <h1 className="text-6xl md:text-9xl font-black text-white mb-8 leading-[0.9] tracking-tighter">
+        <h1 className="text-5xl sm:text-6xl md:text-9xl font-black text-white mb-8 leading-[0.9] tracking-tighter">
           {config.site_title || 'Akamara'} <br />
           <span className="text-comet">
             {t('hero.creacion')}
           </span>
         </h1>
 
-        <p className="text-lg md:text-2xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed font-light italic">
+        <p className="text-base sm:text-lg md:text-2xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed font-light italic px-4">
           "{t('hero.desc')}"
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link to="/servicios" className="group relative px-12 py-5 bg-amber-500 text-slate-950 font-black rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(245,158,11,0.5)] transform-gpu">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full px-4">
+          <Link to="/servicios" className="w-full sm:w-auto group relative px-8 md:px-12 py-4 md:py-5 bg-amber-500 text-slate-950 font-black rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(245,158,11,0.5)] transform-gpu flex justify-center items-center">
             <span className="relative z-10 flex items-center space-x-2">
               <span>{t('hero.button_explore')}</span>
               <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform duration-300" />
             </span>
             <div className="absolute inset-0 shimmer opacity-50"></div>
           </Link>
-          <Link to="/legal" className="px-12 py-5 bg-white/5 border border-white/10 text-white font-bold rounded-full backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex items-center space-x-2">
+          <Link to="/legal" className="w-full sm:w-auto px-8 md:px-12 py-4 md:py-5 bg-white/5 border border-white/10 text-white font-bold rounded-full backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex items-center justify-center space-x-2">
             <Shield size={18} />
             <span>{t('hero.button_legal')}</span>
           </Link>
@@ -256,7 +268,7 @@ const DivisionExplorer = () => {
           <h3 className="text-5xl md:text-7xl font-black text-white">{t('division_explorer.title').split(' ')[0]} <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-700">{t('division_explorer.title').split(' ').slice(1).join(' ')}</span></h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
           {DIVISIONS.map((div) => (
             <DivisionCard key={div.id} {...div} />
           ))}
@@ -268,8 +280,26 @@ const DivisionExplorer = () => {
 
 const MobiliarioSection = () => {
   const { t } = useTranslation();
-  const furnitureList = t('furniture_section.list', { returnObjects: true }) as Record<string, string>;
-  const items = Object.values(furnitureList || {});
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+        try {
+            const response = await databases.listDocuments(
+                APPWRITE_CONFIG.DATABASE_ID,
+                APPWRITE_CONFIG.COLLECTIONS.MOBILIARIO,
+                [Query.equal('active', true), Query.orderDesc('$createdAt'), Query.limit(4)]
+            );
+            setItems(response.documents);
+        } catch (error) {
+            console.error('Error loading mobile:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchItems();
+  }, []);
 
   return (
     <section className="py-32 bg-slate-950 relative border-y border-white/5">
@@ -286,14 +316,23 @@ const MobiliarioSection = () => {
               {t('furniture_section.desc')}
             </p>
 
-            <ul className="grid grid-cols-2 gap-y-4 gap-x-8 mb-12">
-              {items.map(item => (
-                <li key={item} className="flex items-center space-x-3 text-sm text-slate-300">
-                  <div className="w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
-                  <span className="uppercase tracking-wider font-bold text-[10px]">{item}</span>
-                </li>
-              ))}
-            </ul>
+            {items.length > 0 ? (
+                <ul className="grid grid-cols-2 gap-4 mb-12">
+                {items.map(item => (
+                    <li key={item.$id} className="flex items-center space-x-3 text-sm text-slate-300 group">
+                    <img src={item.image_url} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-white/10 group-hover:border-amber-500 transition-colors" />
+                    <div>
+                        <span className="uppercase tracking-wider font-bold text-[10px] block text-white">{item.name}</span>
+                        <span className="text-[9px] text-amber-500">{item.category}</span>
+                    </div>
+                    </li>
+                ))}
+                </ul>
+            ) : (
+                <div className="mb-12 p-4 bg-white/5 rounded-xl border border-white/5 text-xs text-slate-500 italic">
+                    {loading ? 'Cargando catálogo...' : 'Catálogo actualizándose...'}
+                </div>
+            )}
 
             <Link to="/contact" className="inline-flex items-center space-x-4 bg-white/5 hover:bg-white/10 px-8 py-4 rounded-full border border-white/10 transition-colors group">
               <span className="text-white font-bold uppercase tracking-widest text-xs">{t('furniture_section.cta')}</span>
@@ -303,12 +342,18 @@ const MobiliarioSection = () => {
 
           <div className="lg:w-1/2 relative">
             <div className="absolute inset-0 bg-amber-500/20 blur-[100px] rounded-full opacity-50"></div>
-            <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl group">
-              <img
-                src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&q=80&w=1000"
-                alt="DUJO Concept"
-                className="w-full h-auto transform group-hover:scale-105 transition-transform duration-1000"
-              />
+            <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl group min-h-[400px]">
+              {items.length > 0 ? (
+                  <img
+                    src={items[0].image_url}
+                    alt="Featured Furniture"
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000"
+                  />
+              ) : (
+                  <div className="w-full h-full bg-slate-900 flex items-center justify-center">
+                    <span className="text-slate-700 font-bold uppercase tracking-widest">Akamara S.U.R.L.</span>
+                  </div>
+              )}
               <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
                 <div className="text-white font-black text-9xl opacity-10 absolute bottom-0 right-0 leading-none -mb-10 -mr-10">D</div>
               </div>
@@ -323,6 +368,29 @@ const MobiliarioSection = () => {
 const ContactView = () => {
   const { config } = useConfig();
   const { t } = useTranslation();
+  const [formData, setFormData] = useState({ name: '', company: '', division: 'Estrategia', message: '', email: '' });
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true);
+    try {
+        await databases.createDocument(
+            APPWRITE_CONFIG.DATABASE_ID,
+            APPWRITE_CONFIG.COLLECTIONS.MESSAGES,
+            ID.unique(),
+            { ...formData, read: false }
+        );
+        alert('Gracias. Hemos recibido tu mensaje correctamente.');
+        setFormData({ name: '', company: '', division: 'Estrategia', message: '', email: '' });
+    } catch (error) {
+        console.error(error);
+        alert('Hubo un error al enviar. Por favor intenta contactar directamente por email.');
+    } finally {
+        setSending(false);
+    }
+  };
+
   return (
     <div className="pt-40 pb-24 bg-void min-h-screen">
       <div className="max-w-4xl mx-auto px-4">
@@ -344,7 +412,7 @@ const ContactView = () => {
                   <p className="text-white font-bold">{config.contact_phone}</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 cursor-pointer hover:opacity-80 transition-opacity" onClick={() => window.location.href = `mailto:${config.contact_email}`}>
                 <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 shrink-0">
                   <Mail size={18} />
                 </div>
@@ -366,20 +434,24 @@ const ContactView = () => {
           </div>
 
           <div className="p-12 md:w-3/5 bg-slate-900">
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">{t('contact_section.labels.name')}</label>
-                  <input type="text" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
+                  <input required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} type="text" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
                 </div>
                 <div>
                   <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">{t('contact_section.labels.company')}</label>
-                  <input type="text" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
+                  <input value={formData.company} onChange={e => setFormData({...formData, company: e.target.value})} type="text" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
                 </div>
               </div>
               <div>
+                  <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">Email</label>
+                  <input required value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} type="email" className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all" />
+              </div>
+              <div>
                 <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">{t('contact_section.labels.division')}</label>
-                <select className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all appearance-none cursor-pointer">
+                <select value={formData.division} onChange={e => setFormData({...formData, division: e.target.value})} className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all appearance-none cursor-pointer">
                   <option>Estrategia</option>
                   <option>Mobiliario</option>
                   <option>Construcción</option>
@@ -389,10 +461,10 @@ const ContactView = () => {
               </div>
               <div>
                 <label className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-2 block">{t('contact_section.labels.message')}</label>
-                <textarea rows={4} className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all"></textarea>
+                <textarea required value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})} rows={4} className="w-full bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-amber-500 outline-none transition-all"></textarea>
               </div>
-              <button className="w-full bg-amber-500 text-slate-950 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-400 hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-                {t('contact_section.cta')}
+              <button disabled={sending} className="w-full bg-amber-500 text-slate-950 py-4 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-amber-400 hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] disabled:opacity-50">
+                {sending ? 'Enviando...' : t('contact_section.cta')}
               </button>
             </form>
           </div>
@@ -442,8 +514,8 @@ const Footer = () => {
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[9px] font-black uppercase tracking-[0.2em] text-slate-600">
           <p>{t('footer.rights', { year: 2024, title: config.site_title || 'AKAMARA S.U.R.L.' })}</p>
           <div className="flex space-x-6">
-            <span className="hover:text-amber-500 transition-colors cursor-pointer">{t('footer.privacy')}</span>
-            <span className="hover:text-amber-500 transition-colors cursor-pointer">{t('footer.terms')}</span>
+            <Link to="/politicas" className="hover:text-amber-500 transition-colors cursor-pointer">{t('footer.privacy')}</Link>
+            <Link to="/politicas" className="hover:text-amber-500 transition-colors cursor-pointer">{t('footer.terms')}</Link>
           </div>
         </div>
       </div>
@@ -466,8 +538,14 @@ const PublicLayout = () => (
   </div>
 );
 
-import { databases, APPWRITE_CONFIG } from './lib/appwrite';
-import { ID } from 'appwrite';
+import { WhatsAppButton } from './components/WhatsAppButton';
+import OriChatBot from './components/OriChatBot';
+import { LanguageSwitcher } from './components/LanguageSwitcher';
+import DivisionDetail from './pages/divisions/DivisionDetail';
+import NovedadesManager from './pages/admin/NovedadesManager';
+import SettingsManager from './pages/admin/SettingsManager';
+import { SEO } from './components/SEO';
+
 import './i18n';
 
 const App = () => {
@@ -475,6 +553,7 @@ const App = () => {
   // --- ANALYTICS TRACKING ---
   const location = useLocation();
   
+
   useEffect(() => {
     const trackVisit = async () => {
       try {
@@ -485,26 +564,22 @@ const App = () => {
           localStorage.setItem('akamara_visitor_id', visitorId);
         }
 
-  }, [location]);
-  
-  useEffect(() => {
-    const trackVisit = async () => {
-      try {
-        // Generate or retrieve anonymous session ID
-        let visitorId = localStorage.getItem('akamara_visitor_id');
-        if (!visitorId) {
-          visitorId = Math.random().toString(36).substring(2) + Date.now().toString(36);
-          localStorage.setItem('akamara_visitor_id', visitorId);
+
+        try {
+          await databases.createDocument(
+            APPWRITE_CONFIG.DATABASE_ID,
+            APPWRITE_CONFIG.COLLECTIONS.ANALYTICS,
+            ID.unique(),
+            {
+              page: location.pathname + location.search,
+              visitor_id: visitorId,
+              screen_size: `${window.innerWidth}x${window.innerHeight}`,
+              user_agent: navigator.userAgent
+            }
+          );
+        } catch (error) {
+           console.warn('Tracking error:', error);
         }
-
-        const { error } = await supabase.from('analytics_visits').insert({
-          page: location.pathname + location.search,
-          visitor_id: visitorId,
-          screen_size: `${window.innerWidth}x${window.innerHeight}`,
-          user_agent: navigator.userAgent
-        });
-
-        if (error) console.warn('Tracking error:', error);
       } catch (err) {
         // Silent fail for analytics
       }
@@ -527,8 +602,8 @@ const App = () => {
 
   return (
     <ConfigProvider>
-      <HashRouter>
-        <Routes>
+      <SEO />
+      <Routes>
           {/* Public Routes */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={
@@ -540,6 +615,7 @@ const App = () => {
               </>
             } />
             <Route path="/legal" element={<LegalSection />} />
+            <Route path="/politicas" element={<Policies />} />
             <Route path="/servicios" element={<DivisionExplorer />} />
             <Route path="/contact" element={<ContactView />} />
             <Route path="/mobiliario" element={<MobiliarioSection />} />
@@ -554,12 +630,12 @@ const App = () => {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<StatusDashboard />} />
               <Route path="novedades" element={<NovedadesManager />} />
-              <Route path="mobiliario" element={<div className="text-white">Gestor de Mobiliario (En Construcción)</div>} />
+              <Route path="mobiliario" element={<MobiliarioManager />} />
+              <Route path="mensajes" element={<MessagesManager />} />
               <Route path="config" element={<SettingsManager />} />
             </Route>
           </Route>
         </Routes>
-      </HashRouter>
     </ConfigProvider>
   );
 };

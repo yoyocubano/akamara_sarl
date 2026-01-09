@@ -1,7 +1,7 @@
 
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
-import { LayoutDashboard, Newspaper, Package, LogOut, Settings, Sparkles, AlertCircle } from 'lucide-react';
+import { account } from '../lib/appwrite';
+import { LayoutDashboard, Newspaper, Package, LogOut, Settings, Sparkles, AlertCircle, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import logo from '../assets/logo.png';
 
@@ -44,7 +44,7 @@ const AICreditBalance = () => {
             href="https://platform.deepseek.com/top_up"
             target="_blank"
             rel="noopener noreferrer"
-            className="block px-4 py-4 mx-4 mt-2 bg-slate-900 border border-white/5 rounded-xl shadow-inner hover:bg-slate-800 transition-all group/credit"
+            className="block px-3 py-3 mx-2 mt-2 bg-slate-900 border border-white/5 rounded-xl shadow-inner hover:bg-slate-800 transition-all group/credit sm:px-4 sm:py-4 sm:mx-4"
         >
             <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
@@ -111,6 +111,11 @@ const AdminLayout = () => {
                     <Link to="/admin/mobiliario" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors group">
                         <Package className="w-5 h-5 group-hover:text-amber-500 transition-colors" />
                         <span className="text-sm font-bold tracking-wide">Mobiliario</span>
+                    </Link>
+
+                    <Link to="/admin/mensajes" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors group">
+                        <Mail className="w-5 h-5 group-hover:text-amber-500 transition-colors" />
+                        <span className="text-sm font-bold tracking-wide">Mensajes</span>
                     </Link>
 
                     <Link to="/admin/config" className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors group">

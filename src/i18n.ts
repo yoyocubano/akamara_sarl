@@ -160,6 +160,71 @@ i18n
                             file: 'Expediente SURL',
                             gazette: 'Gaceta Oficial'
                         }
+                    },
+                    policies: {
+                        title: 'Términos Legales y Privacidad',
+                        last_update: 'Última actualización: Enero 2026',
+                        back: 'Volver al Inicio',
+                        legal_info: {
+                            title: '1. Información Legal y Corporativa',
+                            intro: 'En cumplimiento de las normativas vigentes en la <strong>República de Cuba</strong> para los nuevos actores económicos, se informa a los usuarios que este sitio web es propiedad y está operado por:',
+                            labels: {
+                                reason: 'Razón Social:',
+                                form: 'Forma Jurídica:',
+                                nit: 'NIT:',
+                                address: 'Domicilio Social:',
+                                framework: 'Marco Regulatorio:'
+                            },
+                            values: {
+                                form: 'Sociedad Unipersonal de Responsabilidad Limitada (S.U.R.L.)',
+                                framework: 'Decreto-Ley 46/2021 sobre las Micro, Pequeñas y Medianas Empresas.'
+                            },
+                            closing: 'La actividad comercial de <strong>AKAMARA S.U.R.L.</strong> se rige estrictamente por la Constitución de la República de Cuba y las leyes complementarias que ordenan el ejercicio del trabajo por cuenta propia y las formas de gestión no estatal.'
+                        },
+                        privacy: {
+                            title: '2. Política de Privacidad y Tratamiento de Datos',
+                            intro: '<strong>AKAMARA S.U.R.L.</strong> se compromete a la protección y confidencialidad absoluta de los datos proporcionados por sus clientes y usuarios.',
+                            points: {
+                                confidentiality: {
+                                    title: 'Confidencialidad:',
+                                    desc: 'Los datos personales (nombre, correo, teléfono) recolectados a través de formularios de contacto o el chat inteligente serán utilizados <strong>exclusivamente</strong> para fines de comunicación comercial y prestación de servicios.'
+                                },
+                                no_transfer: {
+                                    title: 'No Cesión:',
+                                    desc: 'Bajo ninguna circunstancia vendemos, alquilamos o cedemos datos de clientes a terceros, salvo requerimiento expreso de las autoridades legales y judiciales competentes de la República de Cuba.'
+                                },
+                                security: {
+                                    title: 'Seguridad Digital:',
+                                    desc: 'Implementamos medidas de seguridad técnicas (cifrado SSL, bases de datos seguras) para evitar el acceso no autorizado, la pérdida o alteración de sus datos.'
+                                }
+                            }
+                        },
+                        disclaimer: {
+                            title: '3. Exención de Responsabilidad (Disclaimer)',
+                            intro: 'AL UTILIZAR ESTE SITIO WEB Y NUESTROS SERVICIOS DIGITALES, USTED ACEPTA LAS SIGUIENTES CONDICIONES:',
+                            points: {
+                                accuracy: {
+                                    title: '3.1 Exactitud de la Información:',
+                                    desc: 'Aunque nos esforzamos por mantener la información actualizada, los detalles técnicos, precios y disponibilidad de servicios pueden variar sin previo aviso debido a la dinámica del mercado cubano. Las imágenes son con fines ilustrativos.'
+                                },
+                                technical: {
+                                    title: '3.2 Fallos Técnicos:',
+                                    desc: '<strong>AKAMARA S.U.R.L.</strong> no se hace responsable por daños, perjuicios o pérdidas derivadas de fallos en el sistema, servidor o internet, ni por virus informáticos que pudieran infectar el equipo del usuario como consecuencia del acceso o uso del sitio.'
+                                },
+                                ai: {
+                                    title: '3.3 Uso del Chatbot (IA):',
+                                    desc: 'Las respuestas proporcionadas por nuestro asistente virtual ("Ori IA" o "Yunior GPT") son generadas por inteligencia artificial. Si bien están entrenadas para ser precisas, no constituyen asesoramiento legal o contractual vinculante. Verifique siempre la información crítica con nuestro personal humano.'
+                                },
+                                external: {
+                                    title: '3.4 Enlaces Externos:',
+                                    desc: 'No nos hacemos responsables por el contenido, políticas o prácticas de sitios web de terceros enlazados desde nuestra plataforma.'
+                                }
+                            }
+                        },
+                        ip: {
+                            title: '4. Propiedad Intelectual',
+                            desc: 'Todo el contenido de este sitio (logotipos, textos, diseños, código fuente) es propiedad exclusiva de <strong>AKAMARA S.U.R.L.</strong> o cuenta con las licencias de uso correspondientes. Queda prohibida su reproducción total o parcial sin autorización expresa por escrito.'
+                        }
                     }
                 }
             },
@@ -309,6 +374,71 @@ i18n
                             transport: 'Specialized Transport',
                             file: 'SURL File',
                             gazette: 'Official Gazette'
+                        }
+                    },
+                    policies: {
+                        title: 'Legal Terms & Privacy',
+                        last_update: 'Last Updated: January 2026',
+                        back: 'Back to Home',
+                        legal_info: {
+                            title: '1. Legal & Corporate Information',
+                            intro: 'In compliance with current regulations in the <strong>Republic of Cuba</strong> for new economic actors, users are informed that this website is owned and operated by:',
+                            labels: {
+                                reason: 'Company Name:',
+                                form: 'Legal Form:',
+                                nit: 'Tax ID (NIT):',
+                                address: 'Registered Address:',
+                                framework: 'Regulatory Framework:'
+                            },
+                            values: {
+                                form: 'Single-Member Limited Liability Company (S.U.R.L.)',
+                                framework: 'Decree-Law 46/2021 on Micro, Small, and Medium Enterprises.'
+                            },
+                            closing: 'The commercial activity of <strong>AKAMARA S.U.R.L.</strong> is strictly governed by the Constitution of the Republic of Cuba and complementary laws regulating self-employment and non-state management forms.'
+                        },
+                        privacy: {
+                            title: '2. Privacy Policy & Data Treatment',
+                            intro: '<strong>AKAMARA S.U.R.L.</strong> is committed to the protection and absolute confidentiality of data provided by its clients and users.',
+                            points: {
+                                confidentiality: {
+                                    title: 'Confidentiality:',
+                                    desc: 'Personal data (name, email, phone) collected through contact forms or the smart chat will be used <strong>exclusively</strong> for commercial communication and service provision purposes.'
+                                },
+                                no_transfer: {
+                                    title: 'Non-Transfer:',
+                                    desc: 'Under no circumstances do we sell, rent, or transfer client data to third parties, except upon express requirement by competent legal and judicial authorities of the Republic of Cuba.'
+                                },
+                                security: {
+                                    title: 'Digital Security:',
+                                    desc: 'We implement technical security measures (SSL encryption, secure databases) to prevent unauthorized access, loss, or alteration of your data.'
+                                }
+                            }
+                        },
+                        disclaimer: {
+                            title: '3. Disclaimer of Liability',
+                            intro: 'BY USING THIS WEBSITE AND OUR DIGITAL SERVICES, YOU ACCEPT THE FOLLOWING CONDITIONS:',
+                            points: {
+                                accuracy: {
+                                    title: '3.1 Information Accuracy:',
+                                    desc: 'Although we strive to keep information updated, technical details, prices, and service availability may vary without prior notice due to the dynamics of the Cuban market. Images are for illustrative purposes.'
+                                },
+                                technical: {
+                                    title: '3.2 Technical Failures:',
+                                    desc: '<strong>AKAMARA S.U.R.L.</strong> is not responsible for damages, losses, or harm derived from system, server, or internet failures, nor for computer viruses that may infect the user\'s equipment as a result of accessing or using the site.'
+                                },
+                                ai: {
+                                    title: '3.3 Use of Chatbot (AI):',
+                                    desc: 'Responses provided by our virtual assistant ("Ori AI" or "Yunior GPT") are generated by artificial intelligence. While trained to be accurate, they do not constitute binding legal or contractual advice. Always verify critical information with our human staff.'
+                                },
+                                external: {
+                                    title: '3.4 External Links:',
+                                    desc: 'We are not responsible for the content, policies, or practices of third-party websites linked from our platform.'
+                                }
+                            }
+                        },
+                        ip: {
+                            title: '4. Intellectual Property',
+                            desc: 'All content on this site (logos, texts, designs, source code) is the exclusive property of <strong>AKAMARA S.U.R.L.</strong> or has the corresponding use licenses. Total or partial reproduction regarding this content is prohibited without express written authorization.'
                         }
                     }
                 }
