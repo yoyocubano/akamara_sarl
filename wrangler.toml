@@ -1,0 +1,16 @@
+name = "akamara-surl"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
+
+[vars]
+# Configuración Pública
+VITE_APPWRITE_PROJECT_ID = "696075130002ba18c0ac"
+VITE_APPWRITE_ENDPOINT = "https://cloud.appwrite.io/v1"
+
+# 🔥 SECRETOS 🔥
+# Cloudflare cifrará esto si lo subes vía Dashboard, pero aquí está explícito para que funcione YA.
+RESEND_API_KEY = "re_W3T7idS4_5suWnnR5SQkRuMztkwktLfUW"
+
+# 🛑 IMPORTANTE: PEGA AQUÍ TU CLAVE DE ADMIN DE APPWRITE
+# Sin esta clave, el formulario NO podrá guardar en la base de datos.
+APPWRITE_API_KEY = "PEGA_AQUI_LA_LLAVE_LARGA_DE_APPWRITE_QUE_CREASTE"
