@@ -47,8 +47,7 @@ export const AnaliticaDeClientes = {
             visitor_id: visitorId,
             page: path,
             screen_size: `${window.innerWidth}x${window.innerHeight}`,
-            user_agent: navigator.userAgent || 'unknown',
-            referrer: document.referrer || '',
+            user_agent: navigator.userAgent?.substring(0, 250) || 'unknown',
             timestamp: new Date().toISOString()
         };
 

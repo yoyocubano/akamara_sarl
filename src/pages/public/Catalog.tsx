@@ -90,21 +90,22 @@ export const Catalog = () => {
         doc.setTextColor(15, 23, 42);
         doc.setFontSize(22);
         doc.setFont('helvetica', 'bold');
-        doc.text(name, margin, y);
+        if (name) doc.text(String(name), margin, y);
         
         y += 10;
         doc.setTextColor(245, 158, 11);
         doc.setFontSize(10);
-        doc.text(singleItem.type === 'product' ? (isEs ? 'PRODUCTO PREMIUM' : 'PREMIUM PRODUCT') : (isEs ? 'SERVICIO INTEGRAL' : 'INTEGRAL SERVICE'), margin, y);
+        const typeLabel = singleItem.type === 'product' ? (isEs ? 'PRODUCTO PREMIUM' : 'PREMIUM PRODUCT') : (isEs ? 'SERVICIO INTEGRAL' : 'INTEGRAL SERVICE');
+        doc.text(String(typeLabel), margin, y);
 
         y += 15;
         doc.setTextColor(51, 65, 85);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(12);
-        const splitDesc = doc.splitTextToSize(desc, pageWidth - (margin * 2));
-        doc.text(splitDesc, margin, y);
+        const splitDescLines = doc.splitTextToSize(String(desc || ''), pageWidth - (margin * 2));
+        doc.text(splitDescLines, margin, y);
         
-        y += (splitDesc.length * 7) + 10;
+        y += (splitDescLines.length * 7) + 10;
         doc.setFontSize(14);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(15, 23, 42);
@@ -114,8 +115,8 @@ export const Catalog = () => {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(11);
         doc.setTextColor(71, 85, 105);
-        details.forEach((detail) => {
-          doc.text(`• ${detail}`, margin + 5, y);
+        (details || []).forEach((detail) => {
+          if (detail) doc.text(`• ${detail}`, margin + 5, y);
           y += 8;
         });
 
