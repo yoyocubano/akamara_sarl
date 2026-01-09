@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Sparkles, Orbit, Award, FileText, Box, ArrowRight, ArrowUpRight, Zap } from 'lucide-react';
+import { Shield, Sparkles, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useConfig } from '../../contexts/ConfigContext';
-import { DIVISIONS, LEGAL_INFO } from '../../constants';
+import { DIVISIONS } from '../../constants';
 import { databases, APPWRITE_CONFIG } from '../../lib/appwrite';
 import { Query } from 'appwrite';
 import { LegalSection } from './Legal';

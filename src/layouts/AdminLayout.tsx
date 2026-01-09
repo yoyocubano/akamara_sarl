@@ -178,6 +178,7 @@ const AdminLayout = () => {
                 </div>
             </main>
         </div>
+    );
 };
 
 export default AdminLayout;

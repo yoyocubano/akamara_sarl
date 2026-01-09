@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { CATALOG_DATA, CatalogItem } from '../../data/catalog';
 import { LEGAL_INFO } from '../../constants';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 export const Catalog = () => {
   const { t, i18n } = useTranslation();

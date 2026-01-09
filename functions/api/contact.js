@@ -1,18 +1,14 @@
 
-import { Resend } from 'resend';
-import { Client, Databases, ID } from 'node-appwrite';
-
 export const onRequestPost = async (context) => {
   try {
     const { request, env } = context;
     const body = await request.json();
     const { name, email, phone, message, company, division } = body;
 
-    // Usar las variables que TÚ configuraste en el Dashboard de Cloudflare
     const PROJECT_ID = env.VITE_APPWRITE_PROJECT_ID || '696075130002ba18c0ac';
     const ENDPOINT = env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
     const DATABASE_ID = env.VITE_APPWRITE_DATABASE_ID || 'main';
-    const COLLECTION_ID = env.VITE_APPWRITE_COLLECTION_ID || 'petitions'; // 👈 Cambiado a petitions como pediste
+    const COLLECTION_ID = env.VITE_APPWRITE_COLLECTION_ID || 'petitions';
     const API_KEY = env.APPWRITE_API_KEY;
 
     if (!name || !email || !message) {
@@ -22,48 +18,69 @@ export const onRequestPost = async (context) => {
       });
     }
 
-    const resend = new Resend(env.RESEND_API_KEY);
-    const client = new Client().setEndpoint(ENDPOINT).setProject(PROJECT_ID).setKey(API_KEY);
-    const databases = new Databases(client);
-    
-    // 1. Guardar en Appwrite
+    // 1. Guardar en Appwrite vía REST API
     try {
-        await databases.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
-            name,
-            email,
-            message,
-            // Estos campos deben existir en Appwrite como Atributos String
-            company: company || 'No especificada',
-            division: division || 'General',
-            phone: phone || 'No proveído',
-            date: new Date().toISOString()
+        const appwritePayload = {
+            documentId: 'unique()',
+            data: {
+                name,
+                email,
+                message,
+                company: company || 'No especificada',
+                division: division || 'General',
+                phone: phone || 'No proveído',
+                date: new Date().toISOString()
+            }
+        };
+
+        await fetch(`${ENDPOINT}/databases/${DATABASE_ID}/collections/${COLLECTION_ID}/documents`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Appwrite-Project': PROJECT_ID,
+                'X-Appwrite-Key': API_KEY
+            },
+            body: JSON.stringify(appwritePayload)
         });
     } catch (dbError) {
-        console.error('Error Appwrite:', dbError.message);
-        // Si falla Appwrite (por atributos faltantes), seguimos para enviar el email
+        console.error('Error Appwrite REST:', dbError);
     }
 
-    // 2. Enviar Email a akamarasurl@gmail.com
-    const emailData = await resend.emails.send({
-      from: 'Akamara Web <contact@resend.dev>',
-      to: ['akamarasurl@gmail.com'],
-      reply_to: email,
-      subject: `Nueva Propuesta: ${division} - ${name}`,
-      html: `
-        <div style="font-family: sans-serif; padding: 20px; background-color: #f4f4f4;">
-          <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; border-top: 5px solid #d97706;">
-            <h2 style="color: #d97706;">Nueva Propuesta Recibida</h2>
-            <p><strong>Nombre:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Empresa:</strong> ${company || '-'}</p>
-            <p><strong>División:</strong> ${division}</p>
-            <p><strong>Teléfono:</strong> ${phone || '-'}</p>
-            <div style="background: #fffbeb; padding: 15px; border-radius: 5px; margin-top: 20px;">
-              <p style="margin: 0;">${message}</p>
+    // 2. Enviar Email vía Resend REST API
+    const resendResponse = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'Akamara Web <onboarding@resend.dev>',
+        to: ['akamarasurl@gmail.com'],
+        reply_to: email,
+        subject: `Nueva Propuesta: ${division} - ${name}`,
+        html: `
+          <div style="font-family: sans-serif; padding: 20px; background-color: #f4f4f4;">
+            <div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; border-top: 5px solid #d97706;">
+              <h2 style="color: #d97706;">Nueva Propuesta Recibida</h2>
+              <p><strong>Nombre:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Empresa:</strong> ${company || '-'}</p>
+              <p><strong>División:</strong> ${division}</p>
+              <p><strong>Teléfono:</strong> ${phone || '-'}</p>
+              <div style="background: #fffbeb; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                <p style="margin: 0;">${message}</p>
+              </div>
             </div>
           </div>
-        </div>
-      `
+        `
+      })
+    });
+
+    const emailData = await resendResponse.json();
+
+    return new Response(JSON.stringify({ success: true, id: emailData.id }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
     });
 
     return new Response(JSON.stringify({ success: true, id: emailData.id }), {
