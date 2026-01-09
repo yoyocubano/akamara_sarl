@@ -14,8 +14,8 @@ export const Navbar = () => {
 
   const links = [
     { name: t('nav.hub'), path: '/' },
-    { name: t('nav.legal'), path: '/legal' },
-    { name: t('nav.furniture'), path: '/mobiliario' },
+    { name: t('nav.legal'), path: '/politicas' },
+    { name: t('nav.catalogo') || 'Catálogo', path: '/catalogo' },
     { name: t('nav.contact'), path: '/contact' },
   ];
 

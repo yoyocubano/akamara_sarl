@@ -30,7 +30,7 @@ export const Footer = () => {
           <div>
             <h4 className="text-xs font-black uppercase tracking-widest text-amber-500 mb-6">{t('footer.sectors')}</h4>
             <ul className="space-y-4 text-xs text-slate-400 font-medium">
-              <Link to="/mobiliario"><li className="hover:text-white transition-colors cursor-pointer">{t('footer.links.furniture')}</li></Link>
+              <Link to="/catalogo"><li className="hover:text-white transition-colors cursor-pointer">{t('footer.links.furniture')}</li></Link>
               <li className="hover:text-white transition-colors cursor-pointer">{t('footer.links.construction')}</li>
               <li className="hover:text-white transition-colors cursor-pointer">{t('footer.links.catering')}</li>
               <li className="hover:text-white transition-colors cursor-pointer">{t('footer.links.transport')}</li>

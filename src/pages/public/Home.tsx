@@ -46,14 +46,14 @@ export const Hero = () => {
           </p>
   
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full px-4">
-            <Link to="/servicios" className="w-full sm:w-auto group relative px-8 md:px-12 py-4 md:py-5 bg-amber-500 text-slate-950 font-black rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(245,158,11,0.5)] transform-gpu flex justify-center items-center">
+            <Link to="/catalogo" className="w-full sm:w-auto group relative px-8 md:px-12 py-4 md:py-5 bg-amber-500 text-slate-950 font-black rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(245,158,11,0.5)] transform-gpu flex justify-center items-center">
               <span className="relative z-10 flex items-center space-x-2">
-                <span>{t('hero.button_explore')}</span>
+                <span>{t('nav.catalogo')}</span>
                 <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform duration-300" />
               </span>
               <div className="absolute inset-0 shimmer opacity-50"></div>
             </Link>
-            <Link to="/legal" className="w-full sm:w-auto px-8 md:px-12 py-4 md:py-5 bg-white/5 border border-white/10 text-white font-bold rounded-full backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex items-center justify-center space-x-2">
+            <Link to="/politicas" className="w-full sm:w-auto px-8 md:px-12 py-4 md:py-5 bg-white/5 border border-white/10 text-white font-bold rounded-full backdrop-blur-md hover:bg-white/10 transition-all duration-300 flex items-center justify-center space-x-2">
               <Shield size={18} />
               <span>{t('hero.button_legal')}</span>
             </Link>
@@ -173,7 +173,7 @@ export const Hero = () => {
                   </div>
               )}
   
-              <Link to="/contact" className="inline-flex items-center space-x-4 bg-white/5 hover:bg-white/10 px-8 py-4 rounded-full border border-white/10 transition-colors group">
+              <Link to="/catalogo" className="inline-flex items-center space-x-4 bg-white/5 hover:bg-white/10 px-8 py-4 rounded-full border border-white/10 transition-colors group">
                 <span className="text-white font-bold uppercase tracking-widest text-xs">{t('furniture_section.cta')}</span>
                 <ArrowRight className="text-amber-500 w-5 h-5 group-hover:translate-x-2 transition-transform" />
               </Link>

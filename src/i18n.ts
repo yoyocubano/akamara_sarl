@@ -18,7 +18,7 @@ i18n
                     nav: {
                         hub: 'Hub Principal',
                         legal: 'Expediente Legal',
-                        furniture: 'Mobiliario',
+                        catalogo: 'Catálogo',
                         contact: 'Contacto'
                     },
                     hero: {
@@ -161,6 +161,27 @@ i18n
                             gazette: 'Gaceta Oficial'
                         }
                     },
+                    catalog: {
+                        title: 'Catálogo Akamara',
+                        subtitle: 'Portfolio de Productos y Servicios',
+                        download_pdf: 'Descargar Catálogo (PDF)',
+                        all: 'Todos',
+                        products: 'Productos',
+                        services: 'Servicios',
+                        categories: {
+                            seats: 'Asientos',
+                            tables: 'Mesas',
+                            habitational: 'Habitacional',
+                            outdoor: 'Exterior',
+                            office: 'Oficina',
+                            special: 'Especiales',
+                            services: 'Servicios Integrales'
+                        },
+                        actions: {
+                            buy: 'Comprar / Cotizar',
+                            contact: 'Consultar Servicio'
+                        }
+                    },
                     policies: {
                         title: 'Términos Legales y Privacidad',
                         last_update: 'Última actualización: Enero 2026',
@@ -233,7 +254,7 @@ i18n
                     nav: {
                         hub: 'Main Hub',
                         legal: 'Legal Documents',
-                        furniture: 'Furniture',
+                        catalogo: 'Catalog',
                         contact: 'Contact'
                     },
                     hero: {
@@ -374,6 +395,27 @@ i18n
                             transport: 'Specialized Transport',
                             file: 'SURL File',
                             gazette: 'Official Gazette'
+                        }
+                    },
+                    catalog: {
+                        title: 'Akamara Catalog',
+                        subtitle: 'Product & Service Portfolio',
+                        download_pdf: 'Download Catalog (PDF)',
+                        all: 'All',
+                        products: 'Products',
+                        services: 'Services',
+                        categories: {
+                            seats: 'Seats',
+                            tables: 'Tables',
+                            habitational: 'Habitational',
+                            outdoor: 'Outdoor',
+                            office: 'Office',
+                            special: 'Special',
+                            services: 'Comprehensive Services'
+                        },
+                        actions: {
+                            buy: 'Buy / Quote',
+                            contact: 'Inquire Service'
                         }
                     },
                     policies: {

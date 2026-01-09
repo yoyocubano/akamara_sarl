@@ -20,6 +20,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { Home } from './pages/public/Home';
 import { Contact } from './pages/public/Contact';
+import { Catalog } from './pages/public/Catalog';
 import { DivisionExplorer } from './pages/public/Home'; // Re-export if needed or import from Home
 import { MobiliarioSection } from './pages/public/Home'; // Re-export if needed
 
@@ -78,7 +79,7 @@ const App = () => {
             <Route path="/politicas" element={<Policies />} />
             <Route path="/servicios" element={<DivisionExplorer />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/mobiliario" element={<MobiliarioSection />} />
+            <Route path="/catalogo" element={<Catalog />} />
             <Route path="/division/:id" element={<DivisionDetail />} />
           </Route>
 

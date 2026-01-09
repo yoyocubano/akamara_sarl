@@ -21,7 +21,7 @@ export const APPWRITE_CONFIG = {
         ANALYTICS: 'analytics_visits',
         SETTINGS: 'site_settings',
         MOBILIARIO: 'mobiliario',
-        MESSAGES: 'messages'
+        MESSAGES: 'petitions'
     },
     BUCKETS: {
         IMAGES: 'images'
