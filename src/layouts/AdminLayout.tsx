@@ -68,7 +68,7 @@ const AICreditBalance = () => {
                 ></div>
             </div>
             <p className="text-[8px] text-slate-500 mt-2 leading-tight group-hover/credit:text-slate-300 transition-colors">
-                {isExhausted ? '⚠ Crédito agotado. Toca para recargar.' : 'Sincronizado. Toca para gestionar.'}
+                {isExhausted ? '⚠ SIN CRÉDITO. TOCAR PARA RECARGAR' : 'CRÉDITO ACTIVO. GESTIONAR AQUÍ'}
             </p>
         </a>
     );
