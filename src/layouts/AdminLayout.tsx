@@ -1,7 +1,7 @@
 
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { account } from '../lib/appwrite';
-import { LayoutDashboard, Newspaper, Package, LogOut, Settings, Sparkles, AlertCircle, Mail, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Newspaper, Package, LogOut, Settings, Sparkles, AlertCircle, Mail, BarChart3, Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import logo from '../assets/logo.png';
 
