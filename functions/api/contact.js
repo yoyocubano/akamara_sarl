@@ -5,11 +5,17 @@ export const onRequestPost = async (context) => {
     const body = await request.json();
     const { name, email, phone, message, company, division } = body;
 
-    const PROJECT_ID = env.VITE_APPWRITE_PROJECT_ID || '696075130002ba18c0ac';
-    const ENDPOINT = env.VITE_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
-    const DATABASE_ID = env.VITE_APPWRITE_DATABASE_ID || 'main';
-    const COLLECTION_ID = env.VITE_APPWRITE_COLLECTION_ID || 'petitions';
-    const API_KEY = env.APPWRITE_API_KEY;
+    // --- CONFIGURATION ---
+    // Use Akamara-specific variables first, fallback to standard ones
+    const APPWRITE_ENDPOINT = env.AKAMARA_APPWRITE_ENDPOINT || 'https://cloud.appwrite.io/v1';
+    const APPWRITE_PROJECT = env.AKAMARA_APPWRITE_PROJECT_ID || 'fra-696075130002ba18c0ac';
+    const APPWRITE_KEY = env.AKAMARA_APPWRITE_SERVER_KEY || env.APPWRITE_API_KEY; // The long secret key
+    const APPWRITE_DB = 'main';
+    const APPWRITE_COLLECTION = 'petitions';
+    
+    // Resend Config
+    const RESEND_KEY = env.AKAMARA_RESEND_API_KEY || env.RESEND_API_KEY;
+    const MAIL_FROM = env.AKAMARA_MAIL_FROM || 'onboarding@resend.dev';
 
     if (!name || !email || !message) {
       return new Response(JSON.stringify({ error: 'Faltan campos requeridos' }), { 
@@ -33,15 +39,21 @@ export const onRequestPost = async (context) => {
             }
         };
 
-        await fetch(`${ENDPOINT}/databases/${DATABASE_ID}/collections/${COLLECTION_ID}/documents`, {
+        const dbResponse = await fetch(`${APPWRITE_ENDPOINT}/databases/${APPWRITE_DB}/collections/${APPWRITE_COLLECTION}/documents`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Appwrite-Project': PROJECT_ID,
-                'X-Appwrite-Key': API_KEY
+                'X-Appwrite-Project': APPWRITE_PROJECT,
+                'X-Appwrite-Key': APPWRITE_KEY
             },
             body: JSON.stringify(appwritePayload)
         });
+        
+        if (!dbResponse.ok) {
+            const errorText = await dbResponse.text();
+            console.error('Appwrite Error:', errorText);
+        }
+
     } catch (dbError) {
         console.error('Error Appwrite REST:', dbError);
     }
@@ -50,11 +62,11 @@ export const onRequestPost = async (context) => {
     const resendResponse = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+        'Authorization': `Bearer ${RESEND_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'Akamara Web <onboarding@resend.dev>',
+        from: `Akamara Web <${MAIL_FROM}>`,
         to: ['akamarasurl@gmail.com'],
         reply_to: email,
         subject: `Nueva Propuesta: ${division} - ${name}`,
@@ -71,6 +83,9 @@ export const onRequestPost = async (context) => {
                 <p style="margin: 0;">${message}</p>
               </div>
             </div>
+            <div style="text-align: center; margin-top: 20px; color: #888; font-size: 12px;">
+                Enviado desde el formulario web de Akamara S.U.R.L.
+            </div>
           </div>
         `
       })
@@ -78,10 +93,9 @@ export const onRequestPost = async (context) => {
 
     const emailData = await resendResponse.json();
 
-    return new Response(JSON.stringify({ success: true, id: emailData.id }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-    });
+    if (!resendResponse.ok) {
+        throw new Error(emailData.message || 'Error enviando email');
+    }
 
     return new Response(JSON.stringify({ success: true, id: emailData.id }), {
         status: 200,
@@ -95,3 +109,4 @@ export const onRequestPost = async (context) => {
     });
   }
 };
+
