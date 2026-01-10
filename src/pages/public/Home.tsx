@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Sparkles, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,64 @@ import { databases, APPWRITE_CONFIG } from '../../lib/appwrite';
 import { Query } from 'appwrite';
 import { LegalSection } from './Legal';
 
-// --- SUB-COMPONENTS (Could be extracted to separate files later) ---
+
+// --- SUB-COMPONENTS ---
+
+const CinematicSlideshow = () => {
+    // We assume the user will place images named slide1.jpg, slide2.jpg, etc.
+    // We'll try to load up to 5 slides. If they don't exist, the UI might show broken images
+    // depending on browser behavior, but we can't easily file-system check in client-side code
+    // without a build step generating a manifest.
+    // For simplicity, we define the paths we EXPECT.
+    const slides = [
+        '/images/mobiliario_slides/slide1.jpg',
+        '/images/mobiliario_slides/slide2.jpg',
+        '/images/mobiliario_slides/slide3.jpg',
+        '/images/mobiliario_slides/slide4.jpg',
+        '/images/mobiliario_slides/slide5.jpg'
+    ];
+
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % slides.length);
+        }, 5000); // Change every 5 seconds
+        return () => clearInterval(timer);
+    }, []);
+
+    return (
+        <div className="relative w-full h-full overflow-hidden bg-slate-900">
+             {/* Fallback pattern if no images loaded yet */}
+             <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-700 via-slate-900 to-black"></div>
+
+            {slides.map((slide, index) => (
+                <div
+                    key={slide}
+                    className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                        index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+                    }`}
+                >
+                    <img
+                        src={slide}
+                        alt={`Furniture showcase ${index + 1}`}
+                        className={`w-full h-full object-cover transform transition-transform duration-[10000ms] ease-linear ${
+                            index === currentSlide ? 'scale-110' : 'scale-100'
+                        }`}
+                        onError={(e) => {
+                             // Hide broken image links if file doesn't exist
+                             e.currentTarget.style.display = 'none'; 
+                        }}
+                    />
+                     {/* Dark gradient overlay for text readability if needed, though we only have the 'D' */}
+                    <div className="absolute inset-0 bg-black/20"></div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+
 
 export const Hero = () => {
     const { t } = useTranslation();
@@ -178,21 +235,13 @@ export const Hero = () => {
               </Link>
             </div>
   
+
+
             <div className="lg:w-1/2 relative">
               <div className="absolute inset-0 bg-amber-500/20 blur-[100px] rounded-full opacity-50"></div>
-              <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl group min-h-[400px]">
-                {items.length > 0 ? (
-                    <img
-                      src={items[0].image_url}
-                      alt="Featured Furniture"
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000"
-                    />
-                ) : (
-                    <div className="w-full h-full bg-slate-900 flex items-center justify-center">
-                      <span className="text-slate-700 font-bold uppercase tracking-widest">Akamara S.U.R.L.</span>
-                    </div>
-                )}
-                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+              <div className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl group min-h-[600px] h-[600px]">
+                <CinematicSlideshow />
+                <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent pointer-events-none z-20">
                   <div className="text-white font-black text-9xl opacity-10 absolute bottom-0 right-0 leading-none -mb-10 -mr-10">D</div>
                 </div>
               </div>
