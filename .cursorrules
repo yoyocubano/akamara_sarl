@@ -1,0 +1,23 @@
+# 🤖 AGENTIC REASONING RULES: Welux Events
+
+Cualquier Agente de IA que opere en este repositorio DEBE seguir estas reglas de pensamiento para garantizar el estándar de calidad 'Quiet Luxury'.
+
+## 1. Acceso al Córtex
+- Siempre lee `.agent/BRAIN.md` al inicio de la sesión.
+- Si el contexto se llena, usa la técnica de 'Compactación de Contexto' (Resumir el progreso en el BRAIN).
+
+## 2. Verificación Obligatoria
+- NUNCA des por terminada una tarea sin ejecutar `node scripts/orchestrator.js`.
+- El build de producción DEBE ser exitoso.
+
+## 3. Estilo de Marca (Quiet Luxury)
+- Las interfaces deben ser minimalistas, con tipografía premium y espaciado generoso.
+- El código debe ser 'limpio' (Clear Code) y autodocumentado.
+
+## 4. Gestión de Errores (Self-Healing)
+- Si una herramienta falla, busca una alternativa en el terminal.
+- No pidas ayuda al humano hasta haber probado 3 alternativas diferentes.
+
+## 5. Internacionalización
+- Todo texto nuevo debe ir a `client/public/locales/{{lang}}/translation.json`.
+- Nunca hardcodear strings en los componentes.

@@ -1,0 +1,231 @@
+
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+          xmlns:w='urn:schemas-microsoft-com:office:word' 
+          xmlns='http://www.w3.org/TR/REC-html40'>
+    <head>
+      <meta charset="utf-8">
+      <title>Catálogo Maestro Akamara 2026</title>
+      <style>
+        @page Section1 {
+          size: 21cm 29.7cm;
+          margin: 2cm 2cm 2cm 2cm;
+          mso-page-orientation: portrait;
+        }
+        div.Section1 { page: Section1; }
+        body { font-family: 'Arial', sans-serif; color: #0f172a; line-height: 1.5; }
+        h1 { color: #f59e0b; font-size: 32pt; text-align: center; margin-top: 100pt; }
+        h2 { color: #1e293b; font-size: 24pt; text-align: center; margin-bottom: 20pt; }
+        h3 { color: #0f172a; font-size: 18pt; border-bottom: 2px solid #f59e0b; padding-bottom: 5pt; margin-top: 30pt; }
+        .category-header { background-color: #f8fafc; padding: 10pt; font-weight: bold; color: #1e293b; margin-top: 40pt; text-transform: uppercase; font-size: 14pt; }
+        .product-card { margin-bottom: 30pt; page-break-inside: avoid; }
+        .product-name { font-weight: bold; font-size: 16pt; color: #0f172a; margin-bottom: 5pt; }
+        .product-type { color: #f59e0b; font-size: 10pt; font-weight: bold; margin-bottom: 10pt; }
+        .product-desc { color: #475569; margin-bottom: 10pt; }
+        .specs-title { font-weight: bold; font-size: 11pt; color: #0f172a; margin-top: 10pt; }
+        ul { color: #64748b; margin-top: 5pt; }
+        li { margin-bottom: 3pt; }
+        .footer { text-align: center; font-size: 9pt; color: #94a6b8; margin-top: 50pt; }
+      </style>
+    </head>
+    <body>
+      <div class="Section1">
+        <!-- PORTADA -->
+        <h1 style="margin-top: 200pt;">AKAMARA</h1>
+        <h2 style="font-size: 20pt;">CATÁLOGO MAESTRO 2026</h2>
+        <p style="text-align: center; color: #64748b;">Mobiliario de Diseño, Construcción y Logística</p>
+        <p style="text-align: center; margin-top: 300pt; font-size: 10pt;">DOCUMENTO EDITABLE CORPORATIVO</p>
+        
+        <br clear=all style='mso-special-character:page-break'>
+
+        <!-- CONTENIDO -->
+        <h3>NUESTRO PORTAFOLIO</h3>
+  <div class="category-header">Asientos / Butacas</div>
+          <div class="product-card">
+            <div class="product-name">Silla Akamara "Classic Elegance"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Silla con brazos de diseño atemporal, estructura de madera noble con asiento y respaldo totalmente tapizados.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 620 x 660 x 825 mm.</li><li>Estructura de madera maciza seleccionada.</li><li>Tapicería de alta costura personalizable.</li><li>Ergonomía superior para comedores de lujo.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Butaca Akamara "Zenith"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Pieza escultural de estructura robusta, diseñada para el descanso profundo en áreas comunes u hoteles.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 700 x 700 x 760 mm.</li><li>Cojín tapizado fijo de alta resiliencia.</li><li>Base de madera con acabado protector UV.</li><li>Estilo contemporáneo minimalista.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Sofá Modular Akamara "Infinity L"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Sofá con Chaise Longue de gran formato, ideal para lobbies ejecutivos o salones residenciales de lujo.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 2300 x 1600 x 800 mm.</li><li>Estructura interna de madera reforzada.</li><li>Tapizado integral en textiles premium.</li><li>Configuración modular adaptable.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Sillón de Fumador "Heritage"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Pieza de la línea tradicional Akamara, tallada en madera oscura con tapicería de cuero genuino y rejilla artesanal.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Estilo colonial cubano refinado.</li><li>Madera de Cedro con acabado envejecido.</li><li>Rejilla de mimbre natural tejida a mano.</li><li>Ergonomía de descanso profundo.</li>
+            </ul>
+          </div>
+        <div class="category-header">Mesas de Diseño</div>
+          <div class="product-card">
+            <div class="product-name">Mesa de Centro Akamara "Orb"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Mesa circular de centro que combina la calidez de la madera con una sofisticada tapa de cristal.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: Diámetro 900 x 300 mm.</li><li>Estructura de madera maciza torneada.</li><li>Tapa de cristal templado opcional.</li><li>Diseño Zen para espacios de relajación.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Mesa de Comedor Akamara "Imperial Grand"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Imponente mesa de comedor con base de diseño dual y superficie de madera tratada para alta duración.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 2200 x 1200 x 745 mm.</li><li>Capacidad para 8-10 comensales.</li><li>Base de madera y MDF reforzada.</li><li>Ideal para residencias diplomáticas y villas.</li>
+            </ul>
+          </div>
+        <div class="category-header">Mobiliario Habitacional</div>
+          <div class="product-card">
+            <div class="product-name">Mesita de Noche Akamara "Nocturne"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Diseño compacto y funcional con dos gavetas, tiradores metálicos y acabados en madera preciosa.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 500 x 450 x 500 mm.</li><li>Elaborada en madera y tablero MDF enchapado.</li><li>Sistema de deslizamiento suave en gavetas.</li><li>Disponible en diversos tintes de madera.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Cabecero Akamara "Majestic"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Cabecero matrimonial de gran impacto visual con paneles contrastantes y ranuras decorativas.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 2650 x 70 x 900 mm.</li><li>Acabados artesanales de alta precisión.</li><li>Paneles de MDF con texturas modernas.</li><li>Anclaje de seguridad a pared incluido.</li>
+            </ul>
+          </div>
+        <div class="category-header">Exteriores y Piscinas</div>
+          <div class="product-card">
+            <div class="product-name">Tumbona Akamara "Oceanic"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Silla de descanso para exteriores tapizada en polipiel técnica resistente al sol y al salitre.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 1870 x 760 x 810 mm.</li><li>Estructura de madera dura tratada.</li><li>Relleno de espuma de celda cerrada (no absorbe agua).</li><li>Diseño ergonómico flotante.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Cama Balinesa Akamara "Sanctuary"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Estructura monumental para exteriores en madera de teca con cortinas y colchón de alta gama.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 2002 x 2002 x 2180 mm.</li><li>Madera de teca con acabado en aceite marino.</li><li>Tratamiento fungicida e insecticida profesional.</li><li>El epítome del lujo para resorts y piscinas.</li>
+            </ul>
+          </div>
+        <div class="category-header">Línea de Oficina</div>
+          <div class="product-card">
+            <div class="product-name">Buró Directivo Akamara "Nobel"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Escritorio ejecutivo de alta gama con retorno y almacenamiento integrado para profesionales.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Diseño en "L" con pedestal de gavetas.</li><li>Pasacables de diseño oculto.</li><li>Acabado en madera bitono elegante.</li><li>Dimensiones generosas para multitarea.</li>
+            </ul>
+          </div>
+        <div class="category-header">Líneas Especializadas</div>
+          <div class="product-card">
+            <div class="product-name">Cuna Akamara "Little Dreamer"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Cuna artesanal elaborada en madera de Haya, acabados no tóxicos y baranda plegable de seguridad.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 1200 x 600 x 850 mm.</li><li>Acabado blanco nitro certificado para bebés.</li><li>Sistema de patas con ruedas bloqueables.</li><li>Diseño ergonómico para el cuidado del infante.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Atril de Conferencias Akamara "Orator"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Atril profesional para eventos y conferencias, con estantes internos y diseño elegante en madera oscura.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Dimensiones: 900 x 500 x 1100 mm.</li><li>Puertas en tablero MDF enchapado de alta calidad.</li><li>Estantes internos para material de apoyo.</li><li>Acabado Roble Oscuro o Caoba Akamara.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Pupitre Ergonómico "Scholar Pro"</div>
+            <div class="product-type">PRODUCTO PREMIUM</div>
+            <div class="product-desc">Mobiliario escolar de alta resistencia diseñado para uso intensivo en centros educativos modernos.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Estructura metálica tubular reforzada.</li><li>Superficie de laminado de alta presión (HPL).</li><li>Asiento y respaldo de madera contrachapada ergonómica.</li><li>Garantía de durabilidad de 5 años.</li>
+            </ul>
+          </div>
+        <div class="category-header">Servicios Integrales</div>
+          <div class="product-card">
+            <div class="product-name">Diseño de Interiores Akamara 360°</div>
+            <div class="product-type">SERVICIO INTEGRAL</div>
+            <div class="product-desc">Asesoría experta para transformar espacios residenciales y comerciales con el sello Akamara.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Conceptualización y renders 3D.</li><li>Selección curada de mobiliario y texturas.</li><li>Gestión de proyecto de principio a fin.</li><li>Montaje técnico profesional.</li>
+            </ul>
+          </div>
+        
+          <div class="product-card">
+            <div class="product-name">Logística Akamara Expedite</div>
+            <div class="product-type">SERVICIO INTEGRAL</div>
+            <div class="product-desc">Transporte y montaje especializado de mobiliario de lujo en todo el territorio nacional.</div>
+            
+            <div class="specs-title">ESPECIFICACIONES TÉCNICAS:</div>
+            <ul>
+              <li>Flota propia con protección de carga.</li><li>Equipo de instaladores maestros.</li><li>Entregas garantizadas en plazos récord.</li><li>Seguro integral de transporte.</li>
+            </ul>
+          </div>
+        
+        <br clear=all style='mso-special-character:page-break'>
+        <h2>CONTÁCTANOS</h2>
+        <p style="text-align: center;"><strong>WhatsApp:</strong> +53 5874 6866</p>
+        <p style="text-align: center;"><strong>Email:</strong> info@akamara.cu</p>
+        <p style="text-align: center;">La Habana, Cuba</p>
+        
+        <div class="footer">
+          © 2026 AKAMARA S.U.R.L. - Todos los derechos reservados.
+        </div>
+      </div>
+    </body>
+    </html>
+  

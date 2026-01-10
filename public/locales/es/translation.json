@@ -1,0 +1,234 @@
+{
+    "nav": {
+        "hub": "Hub Principal",
+        "legal": "Expediente Legal",
+        "catalogo": "Catálogo",
+        "contact": "Contacto"
+    },
+    "hero": {
+        "title": "Akamara",
+        "subtitle": "Antes del tiempo, Akamara",
+        "creacion": "Creación",
+        "desc": "Akamara nace como un ecosistema multiservicios en Cuba. Desde la fabricación de mobiliario de diseño, hasta soluciones logísticas y constructivas integrales.",
+        "button_explore": "Explorar Divisiones",
+        "button_legal": "Ver Credenciales"
+    },
+    "divisions": {
+        "estrategia": {
+            "title": "Estrategia",
+            "subtitle": "Orula / El Tablero",
+            "desc": "Consultoría estratégica y gestión de proyectos. El oráculo de Akamara para decisiones inteligentes y éxito sostenible.",
+            "fullTitle": "Estrategia y Consultoría Inteligente",
+            "vision": "La sabiduría de Orunmila guía cada decisión comercial, transformando la incertidumbre en destinos claros y prósperos.",
+            "cta": "Consultar el Oráculo Akamara",
+            "points": {
+                "0": "Análisis de Mercado 360",
+                "1": "Optimización de Procesos SURL",
+                "2": "Gestión de Proyectos VIP",
+                "3": "Consultoría en Inversión Extranjera"
+            }
+        },
+        "mobiliario": {
+            "title": "Mobiliario",
+            "subtitle": "Yemayá / La Forma",
+            "desc": "Diseño y fabricación de mobiliario de alto estándar. Maderas preciosas y acabados de lujo para espacios que fluyen como el mar.",
+            "fullTitle": "Mobiliario de Diseño y Confort",
+            "vision": "Como el abrazo de Yemayá, nuestros espacios fluyen con elegancia y serenidad, creando hogares y hoteles de ensueño.",
+            "cta": "Crear mi Espacio Ideal",
+            "points": {
+                "0": "Mobiliario Contract (Hotelería)",
+                "1": "Línea Residencial de Lujo",
+                "2": "Diseño de Interiores Personalizado",
+                "3": "Carpintería de Maderas Preciosas"
+            }
+        },
+        "construccion": {
+            "title": "Construcción",
+            "subtitle": "Shangó / Fuerza",
+            "desc": "Ejecución de obra civil y terminaciones con solidez estructural. Energía creativa y poder de realización.",
+            "fullTitle": "Construcción Civil e Ingeniería",
+            "vision": "La fuerza imparable de Shangó se materializa en estructuras sólidas, combinando la potencia de la obra con la belleza del rayo.",
+            "cta": "Iniciar mi Obra Maestra",
+            "points": {
+                "0": "Mantenimiento Integral de Inmuebles",
+                "1": "Remodelación de Espacios Comerciales",
+                "2": "Infraestructura de Energía Renovables",
+                "3": "Brigadas Especialistas en Acabados"
+            }
+        },
+        "gastronomia": {
+            "title": "Gastronomía",
+            "subtitle": "Olokun / Profundidad",
+            "desc": "Alimentación institucional y eventos. Tesoros culinarios desde las profundidades del sabor y la calidad.",
+            "fullTitle": "Gastronomía y Catering de Autor",
+            "vision": "Desde la profundidad de los secretos de Olokun, emergen banquetes que nutren el alma y elevan cualquier celebración.",
+            "cta": "Degustar la Excelencia",
+            "points": {
+                "0": "Catering para Eventos Corporativos",
+                "1": "Servicio de Comedor Institucional",
+                "2": "Suministros Alimenticios de Calidad",
+                "3": "Gestión de Banquetes y Protocolo"
+            }
+        },
+        "logistica": {
+            "title": "Logística",
+            "subtitle": "Eshú / El Camino",
+            "desc": "Flota especializada y logística 360. Abriendo caminos y asegurando que cada carga llegue a su destino con precisión.",
+            "fullTitle": "Logística y Transporte Nacional",
+            "vision": "Eshú abre los caminos y asegura que cada recurso fluya sin obstáculos a través de la geografía cubana.",
+            "cta": "Abrir nuevos Caminos",
+            "points": {
+                "0": "Transporte de Carga Especializada",
+                "1": "Gestión de Almacenes y Distribución",
+                "2": "Mensajería y Envíos Express",
+                "3": "Logística de Abastecimiento Crítico"
+            }
+        }
+    },
+    "division_explorer": {
+        "subtitle": "Los Elementos",
+        "title": "Divisiones del Hub"
+    },
+    "legal_section": {
+        "subtitle": "La Alquimia Legal",
+        "title_main": "Transparencia y",
+        "title_highlight": "Solidez Jurídica",
+        "desc": "Operamos bajo el marco legal de la República de Cuba como Sociedad Unipersonal de Responsabilidad Limitada (S.U.R.L.), garantizando seguridad en cada transacción comercial.",
+        "constitution_title": "Constitución Oficial",
+        "constitution_desc": "SURL constituida en La Habana el {{founded}}.",
+        "nit_desc": "Registro comercial y fiscal activo certificado.",
+        "mission_title": "Misión Corporativa",
+        "mission_desc": "\"Ser el catalizador del desarrollo empresarial en Cuba a través de un ecosistema de servicios integrales que prioriza la calidad artesanal y la eficiencia técnica.\"",
+        "status_label": "Estado",
+        "status_value": "Activo & Certificado"
+    },
+    "furniture_section": {
+        "badge": "División Premium",
+        "title_main": "Mobiliario",
+        "title_sub": "Espacios que Inspiran",
+        "desc": "Nuestra división de mobiliario fusiona el confort con el diseño arquitectónico. Creamos piezas que visten vestíbulos de hoteles, espacios residenciales y restaurantes con acabados exclusivos.",
+        "list": {
+            "0": "Interiores",
+            "1": "Exteriores & Piscina",
+            "2": "Oficina & Corporativo",
+            "3": "Acabados a Medida"
+        },
+        "cta": "Solicitar Catálogo PDF"
+    },
+    "contact_section": {
+        "title_main": "Hablemos de su",
+        "title_highlight": "Proyecto",
+        "subtitle": "Nuestros expertos están listos para asesorarle en cualquiera de nuestras divisiones operativas.",
+        "labels": {
+            "call": "Llámenos",
+            "write": "Escribanos",
+            "visit": "Visítenos",
+            "name": "Nombre",
+            "company": "Empresa",
+            "division": "División de Interés",
+            "message": "Mensaje"
+        },
+        "cta": "Enviar Propuesta"
+    },
+    "footer": {
+        "sectors": "Sectores",
+        "legal": "Legal",
+        "privacy": "Privacidad",
+        "terms": "Términos",
+        "rights": "© {{year}} {{title}} - LA HABANA, CUBA",
+        "links": {
+            "furniture": "Mobiliario de Diseño",
+            "construction": "Construcción",
+            "catering": "Catering & Cafeteria",
+            "transport": "Transporte Especializado",
+            "file": "Expediente SURL",
+            "gazette": "Gaceta Oficial"
+        }
+    },
+    "catalog": {
+        "title": "Catálogo Akamara",
+        "subtitle": "Portfolio de Productos y Servicios",
+        "download_pdf": "Descargar Catálogo (PDF)",
+        "all": "Todos",
+        "products": "Productos",
+        "services": "Servicios",
+        "categories": {
+            "seats": "Asientos",
+            "tables": "Mesas",
+            "habitational": "Habitacional",
+            "outdoor": "Exterior",
+            "office": "Oficina",
+            "special": "Especiales",
+            "services": "Servicios Integrales"
+        },
+        "actions": {
+            "buy": "Comprar / Cotizar",
+            "contact": "Consultar Servicio"
+        }
+    },
+    "policies": {
+        "title": "Términos Legales y Privacidad",
+        "last_update": "Última actualización: Enero 2026",
+        "back": "Volver al Inicio",
+        "legal_info": {
+            "title": "1. Información Legal y Corporativa",
+            "intro": "En cumplimiento de las normativas vigentes en la <strong>República de Cuba</strong> para los nuevos actores económicos, se informa a los usuarios que este sitio web es propiedad y está operado por:",
+            "labels": {
+                "reason": "Razón Social:",
+                "form": "Forma Jurídica:",
+                "nit": "NIT:",
+                "address": "Domicilio Social:",
+                "framework": "Marco Regulatorio:"
+            },
+            "values": {
+                "form": "Sociedad Unipersonal de Responsabilidad Limitada (S.U.R.L.)",
+                "framework": "Decreto-Ley 46/2021 sobre las Micro, Pequeñas y Medianas Empresas."
+            },
+            "closing": "La actividad comercial de <strong>AKAMARA S.U.R.L.</strong> se rige estrictamente por la Constitución de la República de Cuba y las leyes complementarias que ordenan el ejercicio del trabajo por cuenta propia y las formas de gestión no estatal."
+        },
+        "privacy": {
+            "title": "2. Política de Privacidad y Tratamiento de Datos",
+            "intro": "<strong>AKAMARA S.U.R.L.</strong> se compromete a la protección y confidencialidad absoluta de los datos proporcionados por sus clientes y usuarios.",
+            "points": {
+                "confidentiality": {
+                    "title": "Confidencialidad:",
+                    "desc": "Los datos personales (nombre, correo, teléfono) recolectados a través de formularios de contacto o el chat inteligente serán utilizados <strong>exclusivamente</strong> para fines de comunicación comercial y prestación de servicios."
+                },
+                "no_transfer": {
+                    "title": "No Cesión:",
+                    "desc": "Bajo ninguna circunstancia vendemos, alquilamos o cedemos datos de clientes a terceros, salvo requerimiento expreso de las autoridades legales y judiciales competentes de la República de Cuba."
+                },
+                "security": {
+                    "title": "Seguridad Digital:",
+                    "desc": "Implementamos medidas de seguridad técnicas (cifrado SSL, bases de datos seguras) para evitar el acceso no autorizado, la pérdida o alteración de sus datos."
+                }
+            }
+        },
+        "disclaimer": {
+            "title": "3. Exención de Responsabilidad (Disclaimer)",
+            "intro": "AL UTILIZAR ESTE SITIO WEB Y NUESTROS SERVICIOS DIGITALES, USTED ACEPTA LAS SIGUIENTES CONDICIONES:",
+            "points": {
+                "accuracy": {
+                    "title": "3.1 Exactitud de la Información:",
+                    "desc": "Aunque nos esforzamos por mantener la información actualizada, los detalles técnicos, precios y disponibilidad de servicios pueden variar sin previo aviso debido a la dinámica del mercado cubano. Las imágenes son con fines ilustrativos."
+                },
+                "technical": {
+                    "title": "3.2 Fallos Técnicos:",
+                    "desc": "<strong>AKAMARA S.U.R.L.</strong> no se hace responsable por daños, perjuicios o pérdidas derivadas de fallos en el sistema, servidor o internet, ni por virus informáticos que pudieran infectar el equipo del usuario como consecuencia del acceso o uso del sitio."
+                },
+                "ai": {
+                    "title": "3.3 Uso del Chatbot (IA):",
+                    "desc": "Las respuestas proporcionadas por nuestro asistente virtual (\"Ori IA\" o \"Yunior GPT\") son generadas por inteligencia artificial. Si bien están entrenadas para ser precisas, no constituyen asesoramiento legal o contractual vinculante. Verifique siempre la información crítica con nuestro personal humano."
+                },
+                "external": {
+                    "title": "3.4 Enlaces Externos:",
+                    "desc": "No nos hacemos responsables por el contenido, políticas o prácticas de sitios web de terceros enlazados desde nuestra plataforma."
+                }
+            }
+        },
+        "ip": {
+            "title": "4. Propiedad Intelectual",
+            "desc": "Todo el contenido de este sitio (logotipos, textos, diseños, código fuente) es propiedad exclusiva de <strong>AKAMARA S.U.R.L.</strong> o cuenta con las licencias de uso correspondientes. Queda prohibida su reproducción total o parcial sin autorización expresa por escrito."
+        }
+    }
+}

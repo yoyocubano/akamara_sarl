@@ -1,0 +1,1 @@
+- [ ] Configurar notificaciones de correo para akamarasurl@gmail.com (Resend/Appwrite). Requiere crear cuenta de Resend con ese email o configurar forwarding.

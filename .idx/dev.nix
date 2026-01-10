@@ -28,7 +28,7 @@
       enable = true;
       previews = {
         # 1. Vista Previa para Welux Events
-        web-welux = {
+        "web-welux" = {
           cwd = "welux-events"; 
           # Usar pnpm según el DEPLOY_PROTOCOL.md del proyecto
           command = ["pnpm", "run", "dev", "--", "--port", "$PORT", "--host", "0.0.0.0"];
@@ -36,7 +36,7 @@
         };
 
         # 2. Vista Previa para Akamara
-        web-akamara = {
+        "web-akamara" = {
           # Corregido el nombre de la carpeta según la estructura de tu proyecto
           cwd = "akamara_sarl";
           command = ["npm", "run", "dev", "--", "--port", "$PORT", "--host", "0.0.0.0"];
@@ -49,9 +49,9 @@
     workspace = {
       onCreate = {
         # Usar pnpm para Welux Events
-        install-welux = "cd welux-events && pnpm install";
+        "install-welux" = "cd welux-events && pnpm install";
         # Usar npm para Akamara (asumiendo que usa npm)
-        install-akamara = "cd akamara_sarl && npm install";
+        "install-akamara" = "cd akamara_sarl && npm install";
       };
     };
   };

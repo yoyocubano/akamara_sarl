@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Colombo"
+  given-names: "Yusmel"
+  orcid: "https://orcid.org/0000-0000-0000-0000"
+title: "Akamara S.U.R.L. Business Hub"
+version: 1.0.0
+date-released: 2024-01-01
+url: "https://akamara.cu"
