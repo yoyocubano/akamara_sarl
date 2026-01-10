@@ -5,7 +5,7 @@
 
   # Paquetes para el entorno de desarrollo
   packages = [
-    pkgs.nodejs_20
+    pkgs.nodejs_20_x # Actualizado para mayor compatibilidad con Vite
     pkgs.python3
     pkgs.wrangler # Para Cloudflare Workers
     pkgs.pnpm     # Recomendado por welux-events/DEPLOY_PROTOCOL.md
