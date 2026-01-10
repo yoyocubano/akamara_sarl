@@ -11,28 +11,41 @@ import { LegalSection } from './Legal';
 
 // --- SUB-COMPONENTS ---
 
+
 const CinematicSlideshow = () => {
-    // We assume the user will place images named slide1.jpg, slide2.jpg, etc.
-    // We'll try to load up to 5 slides. If they don't exist, the UI might show broken images
-    // depending on browser behavior, but we can't easily file-system check in client-side code
-    // without a build step generating a manifest.
-    // For simplicity, we define the paths we EXPECT.
-    const slides = [
+    const [slides, setSlides] = useState<string[]>([
         '/images/mobiliario_slides/slide1.jpg',
         '/images/mobiliario_slides/slide2.jpg',
         '/images/mobiliario_slides/slide3.jpg',
         '/images/mobiliario_slides/slide4.jpg',
         '/images/mobiliario_slides/slide5.jpg'
-    ];
-
+    ]);
     const [currentSlide, setCurrentSlide] = useState(0);
 
     useEffect(() => {
+        const fetchSlides = async () => {
+            try {
+                const response = await storage.listFiles(APPWRITE_CONFIG.BUCKETS.IMAGES);
+                if (response.total > 0) {
+                    const dynamicSlides = response.files.map(file => 
+                        storage.getFileView(APPWRITE_CONFIG.BUCKETS.IMAGES, file.$id).href
+                    );
+                    setSlides(dynamicSlides);
+                }
+            } catch (e) {
+                console.warn("Could not load dynamic slides, using defaults.");
+            }
+        };
+        fetchSlides();
+    }, []);
+
+    useEffect(() => {
+        if (slides.length === 0) return;
         const timer = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % slides.length);
         }, 5000); // Change every 5 seconds
         return () => clearInterval(timer);
-    }, []);
+    }, [slides]);
 
     return (
         <div className="relative w-full h-full overflow-hidden bg-slate-900">
@@ -64,6 +77,7 @@ const CinematicSlideshow = () => {
         </div>
     );
 };
+
 
 
 

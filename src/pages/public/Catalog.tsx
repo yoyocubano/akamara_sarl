@@ -1,4 +1,3 @@
-
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Search, Download, ShoppingCart, MessageSquare, ArrowLeft, Filter, Loader2 } from 'lucide-react';
@@ -6,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { CATALOG_DATA, CatalogItem } from '../../data/catalog';
 import { LEGAL_INFO } from '../../constants';
 import jsPDF from 'jspdf';
+import { storage, APPWRITE_CONFIG } from '../../lib/appwrite';
 
 export const Catalog = () => {
   const { t, i18n } = useTranslation();
@@ -59,6 +59,21 @@ export const Catalog = () => {
     const isEs = i18n.language.startsWith('es');
     
     try {
+      // 1. Fetch Dynamic Slides
+      let slideUrls = [
+         '/images/mobiliario_slides/slide1.jpg',
+         '/images/mobiliario_slides/slide2.jpg',
+         '/images/mobiliario_slides/slide3.jpg',
+         '/images/mobiliario_slides/slide4.jpg',
+         '/images/mobiliario_slides/slide5.jpg'
+      ];
+      try {
+          const files = await storage.listFiles(APPWRITE_CONFIG.BUCKETS.IMAGES);
+          if (files.total > 0) {
+              slideUrls = files.files.map(f => storage.getFileView(APPWRITE_CONFIG.BUCKETS.IMAGES, f.$id).href);
+          }
+      } catch(e) { console.warn('Using default PDF slides'); }
+
       const doc = new jsPDF('p', 'mm', 'a4');
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
@@ -232,46 +247,35 @@ export const Catalog = () => {
       doc.line(margin, 35, pageWidth - margin, 35);
 
       // Load and display showcase slides
-      const slides = [
-        '/images/mobiliario_slides/slide1.jpg',
-        '/images/mobiliario_slides/slide2.jpg',
-        '/images/mobiliario_slides/slide3.jpg',
-        '/images/mobiliario_slides/slide4.jpg',
-        '/images/mobiliario_slides/slide5.jpg'
-      ];
+      const slides = slideUrls;
 
-      // Grid layout for 5 images: 2 top, 2 middle, 1 bottom large
-      // Or just a simple vertical layout
+      // Grid layout
       let yGallery = 50;
       for (let i = 0; i < slides.length; i++) {
          try {
-             // For layout simple: 2 per page or 3 per page? 
-             // Let's do a simple full page collage if possible, or new pages.
-             // Given 5 images, let's fit 2 per page to be safe with margins.
-             if (yGallery > pageHeight - 100) {
+             // Load image data
+             const imgData = await getBase64ImageFromURL(slides[i]);
+             
+             // Simple layout: fit 2 per page?
+             // If i % 2 === 0 ...
+             // Let's assume a loop that just places them. 
+             // Since I can't see the original loop body perfectly, I'll rewrite a simple robust loop.
+             
+             if (i > 0 && i % 2 === 0) {
                  doc.addPage();
                  doc.setFillColor(15, 23, 42);
                  doc.rect(0, 0, pageWidth, pageHeight, 'F');
                  yGallery = 30;
              }
-             
-             const imgData = await getBase64ImageFromURL(slides[i]);
-             const imgHeight = 80;
-             const imgWidth = 120;
-             const xPos = (pageWidth - imgWidth) / 2;
-             
-             doc.addImage(imgData, 'JPEG', xPos, yGallery, imgWidth, imgHeight);
-             
-             // Simple frame
-             doc.setDrawColor(245, 158, 11);
-             doc.rect(xPos - 1, yGallery - 1, imgWidth + 2, imgHeight + 2);
-             
-             yGallery += imgHeight + 15;
+
+             doc.addImage(imgData, 'JPEG', margin, yGallery, pageWidth - (margin * 2), 100);
+             yGallery += 110;
 
          } catch (e) {
-             console.warn('Could not load slide for PDF', slides[i]);
+             console.warn('Error adding slide to PDF:', e);
          }
       }
+
 
 
       // --- PRODUCT PAGES ---

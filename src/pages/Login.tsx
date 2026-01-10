@@ -1,5 +1,5 @@
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { account } from '../lib/appwrite';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
@@ -53,6 +53,23 @@ const Login = () => {
     };
     // --------------------------------------
 
+
+    // Check for existing session on mount
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const user = await account.get();
+                if (user) {
+                    console.log('Sesión activa detectada, redirigiendo...');
+                    navigate('/admin');
+                }
+            } catch (e) {
+                // No session active, stay on login
+            }
+        };
+        checkSession();
+    }, [navigate]);
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -62,11 +79,19 @@ const Login = () => {
             await account.createEmailPasswordSession(email, password);
             navigate('/admin');
         } catch (err: any) {
-            setError(err.message || 'Error de autenticación');
+            // Error Code 401 usually means wrong credentials, but sometimes Appwrite throws 409 for active session
+            if (err.type === 'user_session_already_active' || err.message?.includes('active')) {
+                 console.log('Sesión ya activa, permitiendo acceso...');
+                 navigate('/admin');
+            } else {
+                 console.error(err);
+                 setError(err.message || 'Error de autenticación');
+            }
         } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="min-h-screen bg-void flex flex-col items-center justify-center p-4 relative overflow-hidden">

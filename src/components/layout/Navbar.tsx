@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useConfig } from '../../contexts/ConfigContext';
@@ -9,8 +9,11 @@ import logo from '../../assets/logo.png';
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { config } = useConfig();
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
 
   const links = [
     { name: t('nav.hub'), path: '/' },
@@ -29,7 +32,22 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-4 group perspective-[1000px]">
+            <div 
+              className="flex items-center space-x-4 group perspective-[1000px] cursor-pointer select-none"
+              onMouseDown={() => {
+                timerRef.current = setTimeout(() => {
+                  navigate('/admin');
+                }, 40000); // 40 seconds magic entry
+              }}
+              onMouseUp={() => clearTimeout(timerRef.current!)}
+              onMouseLeave={() => clearTimeout(timerRef.current!)}
+              onTouchStart={() => {
+                timerRef.current = setTimeout(() => {
+                  navigate('/admin');
+                }, 40000);
+              }}
+              onTouchEnd={() => clearTimeout(timerRef.current!)}
+            >
               <div className="relative">
                 <div className="absolute inset-0 bg-amber-500 blur-md opacity-20 group-hover:opacity-60 transition-opacity duration-500"></div>
                 <img src={logo} alt="Akamara Logo" className="relative w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-2xl logo-beat transition-all duration-300" />
@@ -38,7 +56,7 @@ export const Navbar = () => {
                 <span className="text-lg md:text-xl font-black tracking-tighter text-white uppercase group-hover:text-amber-500 transition-colors duration-300">{config.site_title || 'Akamara'}</span>
                 <span className="text-[8px] md:text-[9px] uppercase tracking-[0.4em] text-slate-400 font-bold">{config.site_slogan || 'Inicio de la Creación'}</span>
               </div>
-            </Link>
+            </div>
           </div>
 
           <div className="hidden md:flex items-center space-x-12">
