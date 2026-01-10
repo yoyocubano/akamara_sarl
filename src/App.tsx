@@ -29,6 +29,7 @@ import OriChatBot from './components/OriChatBot';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
 import { SEO } from './components/SEO';
 import { AnaliticaDeClientes } from './utils/AnaliticaDeClientes';
+import CookieBanner from './components/CookieBanner';
 
 import './i18n';
 
@@ -42,6 +43,7 @@ const PublicLayout = () => (
     <OriChatBot />
     <WhatsAppButton />
     <LanguageSwitcher />
+    <CookieBanner />
     <Footer />
   </div>
 );
